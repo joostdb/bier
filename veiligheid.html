@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veiligheid in een Brouwerij</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--background-color);
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin-top: 50px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            padding: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-body h3 {
+            color: var(--primary-color);
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .card-body p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .card-body ul {
+            padding-left: 20px;
+        }
+
+        .card-body ul li {
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .formula p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Titel -->
+    <div class="card">
+        <div class="card-header">Veiligheid in een Brouwerij</div>
+        <div class="card-body">
+            <p>Een overzicht van risico's, preventie en wetgeving.</p>
+        </div>
+    </div>
+
+    <!-- Agenda -->
+    <div class="card">
+        <div class="card-header">Agenda</div>
+        <div class="card-body">
+            <ul>
+                <li>Wettelijke kaders: ARAB, AREI, Codex welzijn op het werk</li>
+                <li>Overzicht van veiligheidsrisico's</li>
+                <li>Praktische richtlijnen voor een veilige werkomgeving</li>
+                <li>Wat is een Veiligheidshandboek?</li>
+                <li>Verantwoordelijkheden en opleiding</li>
+                <li>Noodprocedures en preventieve maatregelen</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Wettelijke Kaders -->
+    <div class="card">
+        <div class="card-header">Wettelijke Kaders</div>
+        <div class="card-body">
+            <ul>
+                <li><strong>ARAB</strong>: Algemeen Reglement voor de Arbeidsbescherming.</li>
+                <li><strong>AREI</strong>: Algemeen Reglement op de Elektrische Installaties.</li>
+                <li><strong>Codex Welzijn op het Werk</strong>: Richtlijnen voor veiligheid en welzijn op de werkvloer.</li>
+            </ul>
+            <p><strong>Tip</strong>: Raadpleeg de <a href="https://werk.belgie.be/nl/themas/welzijn-op-het-werk/algemene-beginselen/codex-over-het-welzijn-op-het-werk#toc_heading_1" target="_blank">folderstructuur van de CODEX</a>.</p>
+        </div>
+    </div>
+
+    <!-- Verantwoordelijkheden -->
+    <div class="card">
+        <div class="card-header">Verantwoordelijkheden</div>
+        <div class="card-body">
+            <ul>
+                <li><strong>Werkgever</strong>: Beleid en opleiding.</li>
+                <li><strong>Werknemers</strong>: Veilig werken en rapporteren.</li>
+                <li><strong>Preventieadviseur</strong>: Advies en controle.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Risicoanalyse & Preventiemaatregelen -->
+    <div class="card">
+        <div class="card-header">Risicoanalyse & Preventiemaatregelen</div>
+        <div class="card-body">
+            <ul>
+                <li>Identificatie van gevaren.</li>
+                <li>Evaluatie van risico's.</li>
+                <li>Implementatie van preventieve maatregelen.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Brandrisico’s in de brouwerij -->
+    <div class="card">
+        <div class="card-header">Brandrisico’s in de Brouwerij</div>
+        <div class="card-body">
+            <ul>
+                <li>Hittebronnen.</li>
+                <li>Elektrische installaties (AREI).</li>
+                <li>Ontvlambare stoffen (alcohol, stof).</li>
+                <li>Stockeren van brandbare stoffen (verpakking, paletten, moutopslag).</li>
+            </ul>
+            <h3>Brandpreventiemaatregelen</h3>
+            <ul>
+                <li>Blusmiddelen (brandblussers, sprinklers, dekens, water).</li>
+                <li>Noodplan, routes, plattegrond.</li>
+                <li>Evacuatieprocedures.</li>
+                <li>Brandteam en evacuatieteam.</li>
+                <li>Jaarlijkse training.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ATEX-richtlijnen (Explosiegevaar) -->
+    <div class="card">
+        <div class="card-header">ATEX-richtlijnen (Explosiegevaar)</div>
+        <div class="card-body">
+            <ul>
+                <li>Gevaarlijke zones in de brouwerij.</li>
+                <li>Explosieve atmosferen door alcohol en (mout)stof.</li>
+                <li>Preventieve maatregelen en inspecties.</li>
+                <li>Beveiligen van houders onder druk.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Indienstname van Machines -->
+    <div class="card">
+        <div class="card-header">Indienstname van Machines</div>
+        <div class="card-body">
+            <ul>
+                <li>CE-markering en AREI.</li>
+                <li>CE-certificering volgens Richtlijn EU 2006/42/CE.</li>
+                <li>Testen en valideren voor gebruik.</li>
+                <li>Restrisico-analyse.</li>
+                <li>Indienstnameverslag & VIK.</li>
+                <li>Periodiek onderhoud en controle.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Beveiligingen op Machines -->
+    <div class="card">
+        <div class="card-header">Beveiligingen op Machines</div>
+        <div class="card-body">
+            <ul>
+                <li>Noodstop en afschermingen.</li>
+                <li>Automatische uitschakelingen.</li>
+                <li>Regelmatige veiligheidscontroles.</li>
+                <li>Waterbestendigheid brouwzaal (IP67 & IP69).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Persoonlijke Beschermingsmiddelen (PBM’s) -->
+    <div class="card">
+        <div class="card-header">Persoonlijke Beschermingsmiddelen (PBM’s)</div>
+        <div class="card-body">
+            <ul>
+                <li>Bescherming tegen hitte en chemicaliën.</li>
+                <li>Handschoenen, veiligheidsbril, gehoorbescherming.</li>
+                <li>Gebruik en onderhoud van PBM’s.</li>
+                <li>VIK, aankoop, certificering.</li>
+            </ul>
+            <h3>Voorbeelden van PBM’s</h3>
+            <ul>
+                <li>Veiligheidsbril.</li>
+                <li>Handschoenen (loog, hitte, snijbestendig).</li>
+                <li>Veiligheidschoenen S3.</li>
+                <li>Schorten tegen spatten loog/zuur.</li>
+                <li>Laarzen met stalen tip.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Risico’s in het Magazijn -->
+    <div class="card">
+        <div class="card-header">Risico’s in het Magazijn</div>
+        <div class="card-body">
+            <ul>
+                <li>Stapelen van vaten en dozen.</li>
+                <li>Gebruik van heftrucks en transpalletten.</li>
+                <li>Opslag van chemische stoffen.</li>
+                <li>Ergonomie: manipuleren van zakken mout (25kg).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Risico’s in de Brouwzaal -->
+    <div class="card">
+        <div class="card-header">Risico’s in de Brouwzaal</div>
+        <div class="card-body">
+            <ul>
+                <li>Heet water en stoom.</li>
+                <li>Gebruik van schoonmaakchemicaliën.</li>
+                <li>Ergonomie (bijv. invertsuiker bidons 20-25kg).</li>
+                <li>CIP (Cleaning in Place).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Risico’s bij Fermentatie -->
+    <div class="card">
+        <div class="card-header">Risico’s bij Fermentatie</div>
+        <div class="card-body">
+            <ul>
+                <li>CO2-ophoping in gesloten ruimtes.</li>
+                <li>Drukopbouw in tanks.</li>
+                <li>Lekkages en contaminatie.</li>
+                <li>Lawaai bij centrifuge.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Risico’s in de Bottelarij -->
+    <div class="card">
+        <div class="card-header">Risico’s in de Bottelarij</div>
+        <div class="card-body">
+            <ul>
+                <li>CIP (Cleaning in Place).</li>
+                <li>Snijdende en bewegende machineonderdelen.</li>
+                <li>Nipwerking naar elkaar toedraaiende rollen of banden.</li>
+                <li>Lawaai en trillingen.</li>
+                <li>Manuele handling en ergonomie.</li>
+                <li>Gesprongen flessen.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Risico’s bij Laden en Lossen -->
+    <div class="card">
+        <div class="card-header">Risico’s bij Laden en Lossen</div>
+        <div class="card-body">
+            <ul>
+                <li>Valgevaar en struikelrisico’s.</li>
+                <li>Heftruckverkeer en manoeuvres.</li>
+                <li>Belasting rekken, mast heftruck.</li>
+                <li>Correct gebruik van laadkleppen en palletten.</li>
+                <li>Stapeling & beveiliging lading (stretch folie of stretchhood).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Veelvoorkomende Ongevallen -->
+    <div class="card">
+        <div class="card-header">Veelvoorkomende Ongevallen</div>
+        <div class="card-body">
+            <ul>
+                <li>Snijwonden door glas of metaal.</li>
+                <li>Brandwonden door hete vloeistoffen en dampen.</li>
+                <li>Brandwonden door bijtende CIP-producten.</li>
+                <li>Valpartijen en kneuzingen door natte vloeren.</li>
+                <li>Dodelijke ongevallen door CO2 in tanks.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- EHBO & Noodprocedures -->
+    <div class="card">
+        <div class="card-header">EHBO & Noodprocedures</div>
+        <div class="card-body">
+            <ul>
+                <li>Eerste hulp bij brandwonden en snijwonden.</li>
+                <li>Nooddouche.</li>
+                <li>Spoelflessen voor ogen.</li>
+                <li>CO2-vergiftiging herkennen.</li>
+                <li>Communicatie bij noodsituaties.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Opleiding & Toolbox Meetings -->
+    <div class="card">
+        <div class="card-header">Opleiding & Toolbox Meetings</div>
+        <div class="card-body">
+            <ul>
+                <li>Regelmatige veiligheidstrainingen.</li>
+                <li>Bespreken van incidenten en verbeteringen.</li>
+                <li>Actieve veiligheidscultuur stimuleren.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Samenvatting -->
+    <div class="card">
+        <div class="card-header">Samenvatting</div>
+        <div class="card-body">
+            <ul>
+                <li>Belangrijke risico's en preventiemaatregelen.</li>
+                <li>Welke verbeteringen kunnen we doorvoeren?</li>
+                <li>Vragen?</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
