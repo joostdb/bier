@@ -27,7 +27,6 @@
 <body>
 
 <div class="container">
-    <!-- Calculator Card -->
     <div class="card shadow-sm">
         <div class="card-body">
             <h2 class="text-center mb-4">Bier Accijnzen Calculator</h2>
@@ -54,6 +53,7 @@
                         <label for="hl" class="form-label">Hoeveelheid bier (hl)</label>
                         <input type="number" class="form-control" id="hl" placeholder="Voer aantal hectoliters in">
                     </div>
+                    <p><strong>Aantal flesjes:</strong> <span id="calculatedBottles">-</span></p>
                 </div>
                 <div class="mb-3">
                     <label for="plato" class="form-label">Plato-gehalte (°Plato)</label>
@@ -71,7 +71,6 @@
         </div>
     </div>
 
-    <!-- Result Card -->
     <div class="card shadow-sm mt-4">
         <div class="card-body">
             <h4>Resultaat:</h4>
@@ -82,39 +81,7 @@
             <p><strong>Verpakkingsheffing:</strong> €<span id="verpakkingsheffing">0.00</span></p>
             <hr>
             <h4><strong>Totaal Accijnzen:</strong> €<span id="totaalAccijns">0.00</span></h4>
-        </div>
-    </div>
-
-    <!-- Formules Card -->
-    <div class="card shadow-sm mt-4">
-        <div class="card-body">
-            <h4>Formules:</h4>
-            <div class="formula">
-                <p>1. <strong>Hectoliters berekenen:</strong></p>
-                <p>\[
-                    \text{Hectoliters} = \frac{\text{Aantal flesjes} \times \text{Volume per flesje (liter)}}{100}
-                \]</p>
-                <p>2. <strong>Hectolitergraden Plato:</strong></p>
-                <p>\[
-                    \text{Hectolitergraden Plato} = \text{Hectoliters} \times \text{Afronding Plato-gehalte}
-                \]</p>
-                <p>3. <strong>Accijns:</strong></p>
-                <p>\[
-                    \text{Accijns} = \text{Hectolitergraden Plato} \times 0,7933 \, \text{€/hl°Plato}
-                \]</p>
-                <p>4. <strong>Bijzondere Accijns:</strong></p>
-                <p>\[
-                    \text{Bijzondere Accijns} = \text{Hectolitergraden Plato} \times 1,2110 \, \text{€/hl°Plato}
-                \]</p>
-                <p>5. <strong>Verpakkingsheffing:</strong></p>
-                <p>\[
-                    \text{Verpakkingsheffing} = \text{Hectoliters} \times \text{Verpakkingsheffingstarief}
-                \]</p>
-                <p>6. <strong>Totaal Accijnzen:</strong></p>
-                <p>\[
-                    \text{Totaal Accijnzen} = \text{Accijns} + \text{Bijzondere Accijns} + \text{Verpakkingsheffing}
-                \]</p>
-            </div>
+            <p id="reasonZero" class="text-danger"></p>
         </div>
     </div>
 </div>
@@ -136,26 +103,16 @@ $(document).ready(function() {
         let hectoliters;
         let plato = parseFloat($("#plato").val());
         let packagingRate = parseFloat($("#packaging").val());
+        let reasonZero = "";
 
         if (calculationType === "bottles") {
             let bottles = parseInt($("#bottles").val());
             let volumePerBottle = parseFloat($("#volume").val());
-            if (isNaN(bottles) || bottles <= 0 || isNaN(volumePerBottle) || volumePerBottle <= 0) {
-                alert("Voer geldige waarden in voor aantal flesjes en volume per flesje.");
-                return;
-            }
             hectoliters = Math.floor((bottles * volumePerBottle) / 100);
         } else {
             hectoliters = parseFloat($("#hl").val());
-            if (isNaN(hectoliters) || hectoliters <= 0) {
-                alert("Voer een geldig aantal hectoliters in.");
-                return;
-            }
-        }
-
-        if (isNaN(plato) || plato <= 0) {
-            alert("Voer een geldig Plato-gehalte in.");
-            return;
+            let bottles = Math.round((hectoliters * 100) / 0.25);
+            $("#calculatedBottles").text(bottles);
         }
 
         let roundedPlato = Math.ceil(plato / 2) * 2;
@@ -166,12 +123,17 @@ $(document).ready(function() {
         let verpakkingsheffing = hectoliters * packagingRate;
         let totaalAccijns = accijns + bijzondereAccijns + verpakkingsheffing;
 
+        if (totaalAccijns === 0) {
+            reasonZero = "Het totaalbedrag is €0 omdat de ingevoerde waarden (bijv. hectoliters of Plato-gehalte) te laag zijn of niet correct zijn ingevuld.";
+        }
+
         $("#hectoliters").text(hectoliters);
         $("#hlPlato").text(hlPlato);
         $("#accijns").text(accijns.toFixed(2));
         $("#bijzondereAccijns").text(bijzondereAccijns.toFixed(2));
         $("#verpakkingsheffing").text(verpakkingsheffing.toFixed(2));
         $("#totaalAccijns").text(totaalAccijns.toFixed(2));
+        $("#reasonZero").text(reasonZero);
     });
 });
 </script>
