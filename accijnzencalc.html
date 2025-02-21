@@ -22,8 +22,12 @@
     <h2 class="text-center mb-4">Bier Accijnzen Calculator</h2>
     <form id="taxCalculator">
         <div class="mb-3">
-            <label for="hectoliters" class="form-label">Hoeveelheid Bier (hl)</label>
-            <input type="number" class="form-control" id="hectoliters" placeholder="Voer aantal hectoliters in" required>
+            <label for="bottles" class="form-label">Aantal flesjes</label>
+            <input type="number" class="form-control" id="bottles" placeholder="Voer aantal flesjes in" required>
+        </div>
+        <div class="mb-3">
+            <label for="volume" class="form-label">Volume per flesje (liter)</label>
+            <input type="number" class="form-control" id="volume" value="0.25" step="0.01" required>
         </div>
         <div class="mb-3">
             <label for="plato" class="form-label">Plato-gehalte (°Plato)</label>
@@ -41,6 +45,7 @@
 
     <div class="mt-4 p-3 bg-light rounded">
         <h4>Resultaat:</h4>
+        <p><strong>Hoeveelheid Bier (hl):</strong> <span id="hectoliters">-</span></p>
         <p><strong>Hectolitergraden Plato:</strong> <span id="hlPlato">-</span></p>
         <p><strong>Accijns (€0,7933 per hl°Plato):</strong> €<span id="accijns">0.00</span></p>
         <p><strong>Bijzondere Accijns (€1,2110 per hl°Plato):</strong> €<span id="bijzondereAccijns">0.00</span></p>
@@ -53,20 +58,24 @@
 <script>
 $(document).ready(function() {
     $("#calculate").click(function() {
-        let hectoliters = parseFloat($("#hectoliters").val());
+        let bottles = parseInt($("#bottles").val());
+        let volumePerBottle = parseFloat($("#volume").val());
         let plato = parseFloat($("#plato").val());
         let packagingRate = parseFloat($("#packaging").val());
 
-        if (isNaN(hectoliters) || hectoliters <= 0 || isNaN(plato) || plato <= 0) {
-            alert("Voer geldige waarden in voor hectoliters en Plato-gehalte.");
+        if (isNaN(bottles) || bottles <= 0 || isNaN(volumePerBottle) || volumePerBottle <= 0 || isNaN(plato) || plato <= 0) {
+            alert("Voer geldige waarden in voor aantal flesjes, volume en Plato-gehalte.");
             return;
         }
+
+        // Bereken hectoliters (afronden naar beneden)
+        let hectoliters = Math.floor((bottles * volumePerBottle) / 100);
 
         // Plato afronden naar boven op een even getal
         let roundedPlato = Math.ceil(plato / 2) * 2;
 
-        // Bereken hectolitergraden Plato
-        let hlPlato = hectoliters * roundedPlato;
+        // Bereken hectolitergraden Plato (afronden naar beneden)
+        let hlPlato = Math.floor(hectoliters * roundedPlato);
 
         // Bereken accijnzen
         let accijns = hlPlato * 0.7933;
@@ -75,7 +84,8 @@ $(document).ready(function() {
         let totaalAccijns = accijns + bijzondereAccijns + verpakkingsheffing;
 
         // Resultaten tonen
-        $("#hlPlato").text(hlPlato.toFixed(0));
+        $("#hectoliters").text(hectoliters);
+        $("#hlPlato").text(hlPlato);
         $("#accijns").text(accijns.toFixed(2));
         $("#bijzondereAccijns").text(bijzondereAccijns.toFixed(2));
         $("#verpakkingsheffing").text(verpakkingsheffing.toFixed(2));
