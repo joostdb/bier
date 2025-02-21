@@ -19,71 +19,110 @@
 <body>
 
 <div class="container">
-    <h2 class="text-center mb-4">Bier Accijnzen Calculator</h2>
-    <form id="taxCalculator">
-        <div class="mb-3">
-            <label for="bottles" class="form-label">Aantal flesjes</label>
-            <input type="number" class="form-control" id="bottles" placeholder="Voer aantal flesjes in" required>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Bier Accijnzen Calculator</h2>
+            <form id="taxCalculator">
+                <div class="mb-3">
+                    <label for="calculationType" class="form-label">Bereken op basis van:</label>
+                    <select class="form-select" id="calculationType">
+                        <option value="bottles">Flessen</option>
+                        <option value="hectoliters">Hectoliters</option>
+                    </select>
+                </div>
+                <div id="bottleInputs">
+                    <div class="mb-3">
+                        <label for="bottles" class="form-label">Aantal flesjes</label>
+                        <input type="number" class="form-control" id="bottles" placeholder="Voer aantal flesjes in" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="volume" class="form-label">Volume per flesje (liter)</label>
+                        <input type="number" class="form-control" id="volume" value="0.25" step="0.01" required>
+                    </div>
+                </div>
+                <div id="hlInputs" style="display: none;">
+                    <div class="mb-3">
+                        <label for="hl" class="form-label">Hoeveelheid bier (hl)</label>
+                        <input type="number" class="form-control" id="hl" placeholder="Voer aantal hectoliters in">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="plato" class="form-label">Plato-gehalte (°Plato)</label>
+                    <input type="number" class="form-control" id="plato" placeholder="Voer Plato-gehalte in" required>
+                </div>
+                <div class="mb-3">
+                    <label for="packaging" class="form-label">Type Verpakking</label>
+                    <select class="form-select" id="packaging">
+                        <option value="9.86">Niet-herbruikbaar (€9,86/hl)</option>
+                        <option value="1.41">Herbruikbaar (€1,41/hl)</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-primary w-100" id="calculate">Bereken Accijnzen</button>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="volume" class="form-label">Volume per flesje (liter)</label>
-            <input type="number" class="form-control" id="volume" value="0.25" step="0.01" required>
-        </div>
-        <div class="mb-3">
-            <label for="plato" class="form-label">Plato-gehalte (°Plato)</label>
-            <input type="number" class="form-control" id="plato" placeholder="Voer Plato-gehalte in" required>
-        </div>
-        <div class="mb-3">
-            <label for="packaging" class="form-label">Type Verpakking</label>
-            <select class="form-select" id="packaging">
-                <option value="9.86">Niet-herbruikbaar (€9,86/hl)</option>
-                <option value="1.41">Herbruikbaar (€1,41/hl)</option>
-            </select>
-        </div>
-        <button type="button" class="btn btn-primary w-100" id="calculate">Bereken Accijnzen</button>
-    </form>
+    </div>
 
-    <div class="mt-4 p-3 bg-light rounded">
-        <h4>Resultaat:</h4>
-        <p><strong>Hoeveelheid Bier (hl):</strong> <span id="hectoliters">-</span></p>
-        <p><strong>Hectolitergraden Plato:</strong> <span id="hlPlato">-</span></p>
-        <p><strong>Accijns (€0,7933 per hl°Plato):</strong> €<span id="accijns">0.00</span></p>
-        <p><strong>Bijzondere Accijns (€1,2110 per hl°Plato):</strong> €<span id="bijzondereAccijns">0.00</span></p>
-        <p><strong>Verpakkingsheffing:</strong> €<span id="verpakkingsheffing">0.00</span></p>
-        <hr>
-        <h4><strong>Totaal Accijnzen:</strong> €<span id="totaalAccijns">0.00</span></h4>
+    <div class="card shadow-sm mt-4">
+        <div class="card-body">
+            <h4>Resultaat:</h4>
+            <p><strong>Hoeveelheid Bier (hl):</strong> <span id="hectoliters">-</span></p>
+            <p><strong>Hectolitergraden Plato:</strong> <span id="hlPlato">-</span></p>
+            <p><strong>Accijns (€0,7933 per hl°Plato):</strong> €<span id="accijns">0.00</span></p>
+            <p><strong>Bijzondere Accijns (€1,2110 per hl°Plato):</strong> €<span id="bijzondereAccijns">0.00</span></p>
+            <p><strong>Verpakkingsheffing:</strong> €<span id="verpakkingsheffing">0.00</span></p>
+            <hr>
+            <h4><strong>Totaal Accijnzen:</strong> €<span id="totaalAccijns">0.00</span></h4>
+        </div>
     </div>
 </div>
 
 <script>
 $(document).ready(function() {
+    $("#calculationType").change(function() {
+        if ($(this).val() === "bottles") {
+            $("#bottleInputs").show();
+            $("#hlInputs").hide();
+        } else {
+            $("#bottleInputs").hide();
+            $("#hlInputs").show();
+        }
+    });
+
     $("#calculate").click(function() {
-        let bottles = parseInt($("#bottles").val());
-        let volumePerBottle = parseFloat($("#volume").val());
+        let calculationType = $("#calculationType").val();
+        let hectoliters;
         let plato = parseFloat($("#plato").val());
         let packagingRate = parseFloat($("#packaging").val());
 
-        if (isNaN(bottles) || bottles <= 0 || isNaN(volumePerBottle) || volumePerBottle <= 0 || isNaN(plato) || plato <= 0) {
-            alert("Voer geldige waarden in voor aantal flesjes, volume en Plato-gehalte.");
+        if (calculationType === "bottles") {
+            let bottles = parseInt($("#bottles").val());
+            let volumePerBottle = parseFloat($("#volume").val());
+            if (isNaN(bottles) || bottles <= 0 || isNaN(volumePerBottle) || volumePerBottle <= 0) {
+                alert("Voer geldige waarden in voor aantal flesjes en volume per flesje.");
+                return;
+            }
+            hectoliters = Math.floor((bottles * volumePerBottle) / 100);
+        } else {
+            hectoliters = parseFloat($("#hl").val());
+            if (isNaN(hectoliters) || hectoliters <= 0) {
+                alert("Voer een geldig aantal hectoliters in.");
+                return;
+            }
+        }
+
+        if (isNaN(plato) || plato <= 0) {
+            alert("Voer een geldig Plato-gehalte in.");
             return;
         }
 
-        // Bereken hectoliters (afronden naar beneden)
-        let hectoliters = Math.floor((bottles * volumePerBottle) / 100);
-
-        // Plato afronden naar boven op een even getal
         let roundedPlato = Math.ceil(plato / 2) * 2;
-
-        // Bereken hectolitergraden Plato (afronden naar beneden)
         let hlPlato = Math.floor(hectoliters * roundedPlato);
 
-        // Bereken accijnzen
         let accijns = hlPlato * 0.7933;
         let bijzondereAccijns = hlPlato * 1.2110;
         let verpakkingsheffing = hectoliters * packagingRate;
         let totaalAccijns = accijns + bijzondereAccijns + verpakkingsheffing;
 
-        // Resultaten tonen
         $("#hectoliters").text(hectoliters);
         $("#hlPlato").text(hlPlato);
         $("#accijns").text(accijns.toFixed(2));
