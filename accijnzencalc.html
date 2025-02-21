@@ -4,78 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accijnzen Bier Berekening</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
-        :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --background-color: #f8f9fa;
-            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
         body {
-            background-color: var(--background-color);
-            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
         }
-
         .container {
             max-width: 800px;
             margin-top: 50px;
         }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 20px;
-        }
-
-        .card-header {
-            background-color: var(--primary-color);
-            color: white;
-            border-radius: 10px 10px 0 0;
-            padding: 15px;
-            font-size: 1.25rem;
-            font-weight: bold;
-        }
-
-        .card-body {
-            padding: 20px;
-        }
-
         .formula {
             background-color: #e9ecef;
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 5px;
             margin-top: 20px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .formula p {
-            margin: 0;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border: none;
-            padding: 10px;
-            font-size: 1rem;
-            font-weight: bold;
-        }
-
-        .btn-primary:hover {
-            background-color: #0b5ed7;
-        }
-
-        .result {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-
-        .result strong {
-            color: var(--primary-color);
         }
     </style>
 </head>
@@ -83,9 +28,9 @@
 
 <div class="container">
     <!-- Calculator Card -->
-    <div class="card">
-        <div class="card-header">Bier Accijnzen Calculator</div>
+    <div class="card shadow-sm">
         <div class="card-body">
+            <h2 class="text-center mb-4">Bier Accijnzen Calculator</h2>
             <form id="taxCalculator">
                 <div class="mb-3">
                     <label for="calculationType" class="form-label">Bereken op basis van:</label>
@@ -127,38 +72,48 @@
     </div>
 
     <!-- Result Card -->
-    <div class="card">
-        <div class="card-header">Resultaat</div>
+    <div class="card shadow-sm mt-4">
         <div class="card-body">
-            <div class="result">
-                <p><strong>Hoeveelheid Bier (hl):</strong> <span id="hectoliters">-</span></p>
-                <p><strong>Hectolitergraden Plato:</strong> <span id="hlPlato">-</span></p>
-                <p><strong>Accijns (€0,7933 per hl°Plato):</strong> €<span id="accijns">0.00</span></p>
-                <p><strong>Bijzondere Accijns (€1,2110 per hl°Plato):</strong> €<span id="bijzondereAccijns">0.00</span></p>
-                <p><strong>Verpakkingsheffing:</strong> €<span id="verpakkingsheffing">0.00</span></p>
-                <hr>
-                <h4><strong>Totaal Accijnzen:</strong> €<span id="totaalAccijns">0.00</span></h4>
-            </div>
+            <h4>Resultaat:</h4>
+            <p><strong>Hoeveelheid Bier (hl):</strong> <span id="hectoliters">-</span></p>
+            <p><strong>Hectolitergraden Plato:</strong> <span id="hlPlato">-</span></p>
+            <p><strong>Accijns (€0,7933 per hl°Plato):</strong> €<span id="accijns">0.00</span></p>
+            <p><strong>Bijzondere Accijns (€1,2110 per hl°Plato):</strong> €<span id="bijzondereAccijns">0.00</span></p>
+            <p><strong>Verpakkingsheffing:</strong> €<span id="verpakkingsheffing">0.00</span></p>
+            <hr>
+            <h4><strong>Totaal Accijnzen:</strong> €<span id="totaalAccijns">0.00</span></h4>
         </div>
     </div>
 
     <!-- Formules Card -->
-    <div class="card">
-        <div class="card-header">Formules</div>
+    <div class="card shadow-sm mt-4">
         <div class="card-body">
+            <h4>Formules:</h4>
             <div class="formula">
-                <p><strong>1. Hectoliters berekenen:</strong></p>
-                <p>Hectoliters = (Aantal flesjes × Volume per flesje (liter)) / 100</p>
-                <p><strong>2. Hectolitergraden Plato:</strong></p>
-                <p>Hectolitergraden Plato = Hectoliters × Afronding Plato-gehalte</p>
-                <p><strong>3. Accijns:</strong></p>
-                <p>Accijns = Hectolitergraden Plato × 0,7933 €/hl°Plato</p>
-                <p><strong>4. Bijzondere Accijns:</strong></p>
-                <p>Bijzondere Accijns = Hectolitergraden Plato × 1,2110 €/hl°Plato</p>
-                <p><strong>5. Verpakkingsheffing:</strong></p>
-                <p>Verpakkingsheffing = Hectoliters × Verpakkingsheffingstarief</p>
-                <p><strong>6. Totaal Accijnzen:</strong></p>
-                <p>Totaal Accijnzen = Accijns + Bijzondere Accijns + Verpakkingsheffing</p>
+                <p>1. <strong>Hectoliters berekenen:</strong></p>
+                <p>\[
+                    \text{Hectoliters} = \frac{\text{Aantal flesjes} \times \text{Volume per flesje (liter)}}{100}
+                \]</p>
+                <p>2. <strong>Hectolitergraden Plato:</strong></p>
+                <p>\[
+                    \text{Hectolitergraden Plato} = \text{Hectoliters} \times \text{Afronding Plato-gehalte}
+                \]</p>
+                <p>3. <strong>Accijns:</strong></p>
+                <p>\[
+                    \text{Accijns} = \text{Hectolitergraden Plato} \times 0,7933 \, \text{€/hl°Plato}
+                \]</p>
+                <p>4. <strong>Bijzondere Accijns:</strong></p>
+                <p>\[
+                    \text{Bijzondere Accijns} = \text{Hectolitergraden Plato} \times 1,2110 \, \text{€/hl°Plato}
+                \]</p>
+                <p>5. <strong>Verpakkingsheffing:</strong></p>
+                <p>\[
+                    \text{Verpakkingsheffing} = \text{Hectoliters} \times \text{Verpakkingsheffingstarief}
+                \]</p>
+                <p>6. <strong>Totaal Accijnzen:</strong></p>
+                <p>\[
+                    \text{Totaal Accijnzen} = \text{Accijns} + \text{Bijzondere Accijns} + \text{Verpakkingsheffing}
+                \]</p>
             </div>
         </div>
     </div>
