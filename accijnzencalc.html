@@ -144,7 +144,9 @@ $(document).ready(function() {
 
         } else {
             hectoliters = parseFloat($("#hl").val());
-            let bottles = Math.round((hectoliters * 100) / 0.25);
+       
+            let bottles = Math.round((hectoliters * 100) / volumePerBottle);
+
             $("#calculatedBottles").text(bottles);
         }
 
