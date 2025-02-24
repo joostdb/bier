@@ -131,45 +131,50 @@ $(document).ready(function() {
     });
 
     $("#calculate").click(function() {
-        let calculationType = $("#calculationType").val();
-        let hectoliters;
-        let plato = parseFloat($("#plato").val());
-        let packagingRate = parseFloat($("#packaging").val());
-        let reasonZero = "";
+    let calculationType = $("#calculationType").val();
+    let hectoliters;
+    let plato = parseFloat($("#plato").val());
+    let packagingRate = parseFloat($("#packaging").val());
+    let reasonZero = "";
 
-        if (calculationType === "bottles") {
-            let bottles = parseInt($("#bottles").val());
-            let volumePerBottle = parseFloat($("#volume").val());
-            hectoliters = ((bottles * volumePerBottle) / 100).toFixed(2);
+    if (calculationType === "bottles") {
+        let bottles = parseInt($("#bottles").val());
+        let volumePerBottle = parseFloat($("#volume").val());
+        hectoliters = ((bottles * volumePerBottle) / 100).toFixed(2);
+    } else {
+        hectoliters = parseFloat($("#hl").val());
+    }
 
-        } else {
-            hectoliters = parseFloat($("#hl").val());
-       
-            let bottles = Math.round((hectoliters * 100) / volumePerBottle);
+    // Berekening van aantal flesjes per hectoliter
+    let bottles25cl = Math.round((hectoliters * 100) / 0.25);
+    let bottles33cl = Math.round((hectoliters * 100) / 0.33);
 
-            $("#calculatedBottles").text(bottles);
-        }
+    $("#calculatedBottles").html(`
+        ${bottles25cl} flesjes van 25cl<br>
+        ${bottles33cl} flesjes van 33cl
+    `);
 
-        let roundedPlato = Math.ceil(plato / 2) * 2;
-        let hlPlato = Math.floor(hectoliters * roundedPlato);
+    let roundedPlato = Math.ceil(plato / 2) * 2;
+    let hlPlato = Math.floor(hectoliters * roundedPlato);
 
-        let accijns = hlPlato * 0.7933;
-        let bijzondereAccijns = hlPlato * 1.2110;
-        let verpakkingsheffing = hectoliters * packagingRate;
-        let totaalAccijns = accijns + bijzondereAccijns + verpakkingsheffing;
+    let accijns = hlPlato * 0.7933;
+    let bijzondereAccijns = hlPlato * 1.2110;
+    let verpakkingsheffing = hectoliters * packagingRate;
+    let totaalAccijns = accijns + bijzondereAccijns + verpakkingsheffing;
 
-        if (totaalAccijns === 0) {
-            reasonZero = "Het totaalbedrag is €0 omdat de ingevoerde waarden (bijv. hectoliters of Plato-gehalte) te laag zijn of niet correct zijn ingevuld.";
-        }
+    if (totaalAccijns === 0) {
+        reasonZero = "Het totaalbedrag is €0 omdat de ingevoerde waarden (bijv. hectoliters of Plato-gehalte) te laag zijn of niet correct zijn ingevuld.";
+    }
 
-        $("#hectoliters").text(hectoliters);
-        $("#hlPlato").text(hlPlato);
-        $("#accijns").text(accijns.toFixed(2));
-        $("#bijzondereAccijns").text(bijzondereAccijns.toFixed(2));
-        $("#verpakkingsheffing").text(verpakkingsheffing.toFixed(2));
-        $("#totaalAccijns").text(totaalAccijns.toFixed(2));
-        $("#reasonZero").text(reasonZero);
-    });
+    $("#hectoliters").text(hectoliters);
+    $("#hlPlato").text(hlPlato);
+    $("#accijns").text(accijns.toFixed(2));
+    $("#bijzondereAccijns").text(bijzondereAccijns.toFixed(2));
+    $("#verpakkingsheffing").text(verpakkingsheffing.toFixed(2));
+    $("#totaalAccijns").text(totaalAccijns.toFixed(2));
+    $("#reasonZero").text(reasonZero);
+});
+
 });
 </script>
 
