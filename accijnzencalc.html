@@ -140,7 +140,8 @@ $(document).ready(function() {
         if (calculationType === "bottles") {
             let bottles = parseInt($("#bottles").val());
             let volumePerBottle = parseFloat($("#volume").val());
-            hectoliters = Math.floor((bottles * volumePerBottle) / 100);
+            hectoliters = ((bottles * volumePerBottle) / 100).toFixed(2);
+
         } else {
             hectoliters = parseFloat($("#hl").val());
             let bottles = Math.round((hectoliters * 100) / 0.25);
