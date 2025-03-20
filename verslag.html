@@ -1,330 +1,1746 @@
-<html lang="en"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      border: unset;
-    }
-
-    html,
-    body {
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      position: relative;
-      font-family: "SF Pro";
-    }
-
-    body {
-      display: flex;
-      flex-direction: column;
-    }
-
-    iframe {
-      flex: 1;
-      min-height: 0px;
-    }
-
-    a {
-      text-decoration: unset;
-    }
-
-    .page-footer,
-    .page-footer-mobile {
-      bottom: 0;
-      width: 100%;
-      padding: 12px 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-      background-color: #fff;
-      transition: opacity 0.15s ease-in-out;
-    }
-
-
-    .page-footer-mobile {
-      display: none;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 4px;
-    }
-
-    .footer-left {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-    }
-
-    .logo-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-shrink: 0;
-    }
-
-    .logo-name {
-      color: #34322D;
-      font-size: 13px;
-      font-style: normal;
-      line-height: 16px;
-      letter-spacing: -0.304px;
-      font-family: Georgia;
-    }
-
-    .description {
-      color: #858481;
-      font-size: 12px;
-      font-style: normal;
-      font-weight: 400;
-      line-height: 18px;
-      letter-spacing: -0.077px;
-    }
-
-    .footer-right {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .footer-button {
-      display: flex;
-      min-width: 64px;
-      min-height: 28px;
-      padding: 6px 8px;
-      justify-content: center;
-      align-items: center;
-      gap: 4px;
-      border-radius: 8px;
-      background-color: #1A1A19;
-      opacity: 1;
-      transition: opacity 0.2s ease-in-out;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      margin-left: 6px;
-
-    }
-
-    .footer-button:hover {
-      opacity: 0.8;
-    }
-
-    .close {
-      cursor: pointer;
-      opacity: 1;
-      transition: opacity 0.2s ease-in-out;
-      flex-shrink: 0;
-    }
-
-    .close:hover {
-      opacity: 0.8;
-    }
-
-    .info {
-      position: relative;
-      cursor: pointer;
-      flex-shrink: 0;
-      top: 2px;
-    }
-
-    .info:hover::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: 140%;
-      left: 50%;
-      transform: translateX(-50%);
-      padding: 4px 8px;
-      border-radius: 12px;
-      font-size: 12px;
-      line-height: 16px;
-      background-color: #171818;
-      color: #fff;
-      max-width: 280px;
-      width: max-content;
-    }
-
-
-    @media (max-width: 830px) {
-      .page-footer {
-        display: none;
-      }
-
-      .page-footer-mobile {
-        display: flex;
-      }
-
-      .footer-left {
-        width: 100%;
-      }
-
-      .footer-right {
-        width: 100%;
-        align-items: flex-start;
-      }
-
-      .close {
-        margin-left: auto;
-      }
-    }
-
-    @media (max-width: 540px) {
-      .info:hover::after {
-        position: fixed;
-        bottom: 64px;
-        left: 150px;
-      }
-    }
-  </style>
-
-<meta id="ConnectiveDocSignExtentionInstalled" name="ConnectiveDocSignExtentionInstalled" data-extension-version="1.0.7"><title>SYNTRA Microbrouwer - Praktijklessen</title></head>
-
+<html lang="nl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SYNTRA Microbrouwer - Praktijklessen</title>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #6699CC;
+            --accent-color: #E6F2FF;
+            --text-color: #333;
+            --background-color: #F5F5F5;
+            --border-color: #CCCCCC;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        nav {
+            background-color: var(--secondary-color);
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 0;
+            margin: 0;
+        }
+        
+        nav li {
+            margin: 0 1rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        nav a:hover {
+            background-color: var(--primary-color);
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary-color);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+            margin-top: 2rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+        
+        .beer-info {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .beer-specs {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .beer-spec {
+            background-color: var(--accent-color);
+            padding: 0.5rem;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .beer-spec strong {
+            display: block;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+        
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            margin-top: 3rem;
+        }
+        
+        .slider-container {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .slider-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .slider-label {
+            width: 150px;
+            font-weight: bold;
+        }
+        
+        .slider {
+            flex-grow: 1;
+            margin: 0 15px;
+        }
+        
+        .slider-value {
+            width: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .interactive-section {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .result-display {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        table, th, td {
+            border: 1px solid var(--border-color);
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: var(--accent-color);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .tab-button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .tab-button.active {
+            background-color: var(--primary-color);
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav li {
+                margin: 0.5rem 0;
+            }
+            
+            .beer-specs {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .slider-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .slider-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .slider-value {
+                width: 100%;
+                text-align: center;
+                margin-top: 5px;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                margin: 5px 0;
+            }
+        }
+    </style>
+<meta id="ConnectiveDocSignExtentionInstalled" name="ConnectiveDocSignExtentionInstalled" data-extension-version="1.0.7"></head>
 <body>
-  <iframe src="https://jfvyzrob.usercontents.app/" frameborder="0" width="100%"></iframe>
-
-  <div class="page-footer" style="opacity: 1;">
-    <!-- footer-left -->
-    <div class="footer-left">
-      <a href="https://manus.im/" class="logo-wrapper" target="_blank">
-        <!-- logo -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 25 26" fill="none">
-          <path d="M17.7991 24.2474C19.5101 23.1618 20.6932 17.3398 20.4329 15.6061C20.4329 15.6061 20.1617 14.6753 19.5 14.6753C18.8382 14.6753 18.5629 15.3725 18.5629 15.3725C18.5629 15.3725 18.3887 16.0162 18.1153 16.8266C17.6925 18.0803 17.5146 19.6272 16.4117 20.0189C15.3088 20.4106 14.2059 20.04 14.2059 20.04C14.9558 22.8843 16.0881 25.333 17.7991 24.2474Z" fill="#34322D"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.6743 13.2405C9.04571 13.311 8.71461 13.5486 8.60292 13.6603C8.16174 14.1015 7.94115 14.5427 7.94115 14.7633C7.94115 14.9839 7.4222 13.7306 7.30817 13.6132C6.96868 13.2636 6.97688 12.7049 7.32648 12.3655C7.81725 11.8889 8.61987 11.583 9.47769 11.4868C10.3674 11.3871 11.4224 11.4982 12.49 11.9711C13.736 12.5231 14.4033 13.6867 14.6553 14.7502C14.7833 15.2901 14.816 15.8448 14.7504 16.3504C14.6868 16.8412 14.5192 17.366 14.1707 17.7655C13.4447 18.5976 12.3738 18.5039 11.7945 18.381C11.4681 18.3118 11.1802 18.2101 10.9777 18.1284C10.875 18.0869 10.7906 18.0492 10.7301 18.0208C10.6997 18.0066 10.6751 17.9947 10.657 17.9857C10.6479 17.9812 10.6404 17.9774 10.6345 17.9744L10.627 17.9706L10.6242 17.9691L10.6226 17.9683C10.6226 17.9683 10.6221 17.968 11.0296 17.1854L10.6221 17.968C10.1899 17.743 10.0219 17.2102 10.247 16.7779C10.4716 16.3465 11.0027 16.1784 11.4345 16.4015M11.4345 16.4015L11.4355 16.402L11.4345 16.4015ZM11.4345 16.4015L11.4408 16.4046C11.448 16.4082 11.4607 16.4144 11.4784 16.4227C11.514 16.4394 11.5688 16.4639 11.6378 16.4918C11.7787 16.5486 11.9648 16.6131 12.1608 16.6547C12.6262 16.7535 12.7935 16.6597 12.841 16.6053C12.8792 16.5615 12.9625 16.4153 13.0004 16.1234C13.0363 15.8464 13.0211 15.5069 12.9382 15.1572C12.7686 14.4416 12.3626 13.8448 11.7753 13.5846C11.0097 13.2455 10.271 13.1736 9.6743 13.2405" fill="#34322D"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.48757 4.47622C3.27296 4.91373 3.45365 5.44237 3.89116 5.65699C4.51956 5.96524 5.06489 6.26919 5.60482 6.87794C5.92818 7.2425 6.48585 7.27591 6.85042 6.95255C7.21499 6.6292 7.2484 6.07152 6.92504 5.70695C6.15564 4.83949 5.36367 4.41371 4.66834 4.07263C4.23083 3.85802 3.70218 4.03871 3.48757 4.47622Z" fill="#34322D"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.25659 1.90704C7.78383 2.02523 7.49639 2.50429 7.61458 2.97705C7.69716 3.30734 7.77416 3.58976 7.84466 3.8483C7.97958 4.34313 8.09065 4.75046 8.17121 5.23845C8.25058 5.71926 8.7047 6.04468 9.1855 5.96531C9.6663 5.88594 9.99172 5.43183 9.91235 4.95102C9.81714 4.37425 9.66887 3.82852 9.52006 3.28077C9.45416 3.03822 9.38816 2.79527 9.3266 2.54905C9.20841 2.07629 8.72935 1.78885 8.25659 1.90704Z" fill="#34322D"></path>
-          <path d="M12 5.41096C12.2206 4.52861 12.4412 3.86684 12.8427 3.20508" stroke="#34322D" stroke-width="1.76471" stroke-miterlimit="10" stroke-linecap="round"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2411 9.60185C16.9915 9.95163 16.9918 9.95034 16.9918 9.95034L16.992 9.94902L16.9925 9.94635L16.9935 9.9408L16.9957 9.92888C16.9971 9.92058 16.9986 9.91155 17.0002 9.90182C17.0033 9.88239 17.0067 9.86001 17.0099 9.83496C17.0165 9.78521 17.0231 9.72305 17.0275 9.65108C17.0359 9.51241 17.0376 9.31091 17.0021 9.07721C16.9349 8.6345 16.6771 7.79535 15.7685 7.30889L15.5887 7.21266L15.3923 7.15829L14.9406 8.84156C15.3434 9.05719 15.2411 9.60185 15.2411 9.60185ZM14.9612 10.7124L15.2411 9.60185L16.9915 9.95163L16.9819 10.0029L16.6993 11.124C16.6449 11.3995 16.6378 11.5571 16.6408 11.6403C16.6432 11.7081 16.652 11.7303 16.6563 11.7412L16.6568 11.7425C16.6679 11.7706 16.6964 11.8316 16.8009 11.9901C16.8435 12.0547 16.8878 12.1194 16.9441 12.2018C16.9591 12.2237 16.9749 12.2467 16.9917 12.2714C17.0675 12.3824 17.1561 12.5133 17.2501 12.6597C17.8372 13.5747 17.8948 14.4528 17.8917 15.0155C17.8917 15.0238 17.8916 15.032 17.8916 15.0402C17.9617 15.0642 18.0363 15.0885 18.1154 15.1137C18.1416 15.1221 18.1762 15.133 18.2126 15.1445C18.2637 15.1606 18.3181 15.1778 18.357 15.1903C18.4335 15.2148 18.5312 15.2467 18.6257 15.2819C18.6915 15.3064 18.7546 15.3309 18.814 15.3555C18.8709 15.3791 18.9405 15.4094 19.0137 15.4463C19.0705 15.475 19.1629 15.5241 19.2675 15.5966L20.1869 15.9923L20.1736 17.1701C20.1658 17.8626 19.8872 18.5926 19.6896 19.0446C19.4717 19.5429 19.1838 20.0743 18.9189 20.4275C18.5488 20.9208 18.1295 21.4417 17.625 21.7748C17.3276 21.9711 16.9685 22.1272 16.5448 22.1784C16.1673 22.2241 15.8406 22.1735 15.6006 22.1151L15.5298 22.1006C15.4587 22.086 15.3569 22.065 15.2328 22.0391C14.9851 21.9876 14.6474 21.9165 14.2893 21.8387C13.629 21.6953 12.734 21.4947 12.3119 21.3547L12.2814 21.3445L12.2512 21.3333C12.064 21.2638 11.7474 21.1858 11.2231 21.0663C11.1914 21.059 11.1591 21.0517 11.1262 21.0442C10.6738 20.9412 10.1171 20.8145 9.58993 20.6549C9.04393 20.4895 8.36861 20.2436 7.79518 19.8429C7.19331 19.4223 6.50905 18.6806 6.47094 17.5681C6.46524 17.4016 6.46906 17.2406 6.47936 17.0879C6.20834 16.7941 5.98086 16.4101 5.8659 15.9183C5.75389 15.4392 5.81584 15.0144 5.89442 14.7163C5.97321 14.4174 6.0929 14.1561 6.19292 13.9608C6.22668 13.8949 6.2617 13.8299 6.29664 13.7671C5.96579 13.6627 5.59209 13.5337 5.22839 13.3786C4.75338 13.1762 4.07939 12.8421 3.57621 12.3029C3.30521 12.0124 3.02145 11.5962 2.90672 11.0519C2.78666 10.4824 2.88642 9.93592 3.12022 9.468C3.68936 8.32897 4.77648 7.92654 5.74338 7.89172C6.61646 7.86028 7.5455 8.10459 8.37793 8.39654C9.13636 8.66254 10.2219 9.15731 11.1441 9.58826C11.4478 9.09019 11.8482 8.52738 12.2272 8.07284L12.3025 7.98254L12.3897 7.90323C13.0418 7.30964 13.7744 7.11007 14.3327 7.06726C14.6063 7.04628 14.842 7.06194 15.0182 7.08482C15.1073 7.09639 15.1841 7.11017 15.2465 7.1232C15.2777 7.12974 15.3056 7.13615 15.33 7.14209C15.3421 7.14506 15.3534 7.14792 15.3638 7.15063L15.3787 7.15458L15.3857 7.15647L15.389 7.15738L15.3907 7.15784C15.3907 7.15784 15.3923 7.15829 14.9406 8.84156C14.9406 8.84156 14.2363 8.64656 13.6308 9.18107C13.6247 9.18645 13.6186 9.19191 13.6125 9.19744C13.5937 9.21996 13.5749 9.24277 13.5561 9.26583C13.529 9.29901 13.5018 9.33272 13.4747 9.36686C13.4667 9.37688 13.4588 9.38694 13.4508 9.39704C12.8465 10.1637 12.8824 10.484 11.7793 11.8077C11.7793 11.8077 11.2047 11.5416 10.861 11.38C10.6252 11.2692 10.376 11.152 10.122 11.0339C9.30257 10.6529 8.43387 10.2622 7.80874 10.043C6.26964 9.50318 5.13491 9.43466 4.72074 10.2636C4.17438 11.357 6.39299 11.9906 7.50784 12.3089C7.74261 12.376 7.92844 12.429 8.02918 12.4695C8.60097 12.699 8.64087 13.1595 8.47059 13.5722C8.37122 13.8131 8.31458 13.9488 8.02941 14.234C7.58824 14.6752 7.51589 15.1976 7.60014 15.558C7.64232 15.7384 7.72576 15.8696 7.82495 15.965C8.09106 16.221 8.4705 16.2195 8.4705 16.2195C8.4705 16.2195 8.22583 16.8447 8.24975 17.5431C8.25502 17.6968 8.29636 17.8367 8.36761 17.9646C8.79059 18.724 10.2676 19.0605 11.5086 19.3431C12.0298 19.4618 12.5094 19.5711 12.8517 19.6982C13.4654 19.9018 15.9702 20.4106 15.9702 20.4106C16.4324 20.5319 16.719 20.3851 17.4792 19.3717C17.7949 18.9509 18.3866 17.7603 18.3939 17.1168C18.2979 17.0755 18.2911 17.0611 18.2844 17.0466C18.2751 17.0267 18.2658 17.0068 18.0231 16.9163C17.9419 16.8861 17.8333 16.8518 17.7089 16.8126C17.1914 16.6493 16.402 16.4004 16.191 15.9989C16.0886 15.804 16.0967 15.5424 16.1061 15.2366C16.1208 14.761 16.1387 14.1783 15.7499 13.5724C15.6545 13.4236 15.5629 13.2898 15.4773 13.1646C14.9897 12.4518 14.6939 12.0193 14.9612 10.7124ZM6.80826 12.865C6.80939 12.8618 6.80896 12.8625 6.80755 12.8669L6.80826 12.865ZM17.8827 15.5767C17.8827 15.5767 17.8827 15.5698 17.8813 15.5579C17.8818 15.571 17.8827 15.5767 17.8827 15.5767Z" fill="#34322D"></path>
-        </svg>
-        <!-- logo-name -->
-        <span class="logo-name">
-          Made with Manus
-        </span>
-      </a>
-    </div>
-    <!-- footer-right -->
-    <div class="footer-right">
-      <span class="description">
-        <span data-tooltip="Not an official Manus website nor endorsed by Manus. Content may contain inaccuracies; double-check before use. Do not submit passwords, credit cards, or personal information." class="info">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <g id="lucide/info" clip-path="url(#clip0_3923_133915)">
-              <path id="Vector" d="M6 8V6M6 4H6.005M11 6C11 8.76142 8.76142 11 6 11C3.23858 11 1 8.76142 1 6C1 3.23858 3.23858 1 6 1C8.76142 1 11 3.23858 11 6Z" stroke="#858481" stroke-linecap="round" stroke-linejoin="round"></path>
-            </g>
-            <defs>
-              <clipPath id="clip0_3923_133915">
-                <rect width="12" height="12" fill="white"></rect>
-              </clipPath>
-            </defs>
-          </svg>
-        </span>
-        This user-generated website was created with AI. Use with caution.
-      </span>
-      <a href="https://manus.im/invitation?from=space" class="footer-button" target="_blank">
-        Create my website
-      </a>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" class="close">
-        <path d="M12 4L4 12" stroke="#858481" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"></path>
-        <path d="M4 4L12 12" stroke="#858481" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </div>
-  </div>
-
-  <div class="page-footer-mobile" style="opacity: 1;">
-    <!-- footer-right -->
-    <div class="footer-right">
-      <span class="description">
-        This user-generated website was created with AI. Use with caution.
-        <span data-tooltip="Not an official Manus website nor endorsed by Manus. Content may contain inaccuracies; double-check before use. Do not submit passwords, credit cards, or personal information." class="info">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <g id="lucide/info" clip-path="url(#clip0_3923_133915)">
-              <path id="Vector" d="M6 8V6M6 4H6.005M11 6C11 8.76142 8.76142 11 6 11C3.23858 11 1 8.76142 1 6C1 3.23858 3.23858 1 6 1C8.76142 1 11 3.23858 11 6Z" stroke="#858481" stroke-linecap="round" stroke-linejoin="round"></path>
-            </g>
-            <defs>
-              <clipPath id="clip0_3923_133915">
-                <rect width="12" height="12" fill="white"></rect>
-              </clipPath>
-            </defs>
-          </svg>
-        </span>
-
-      </span>
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none" class="close">
-        <path d="M12 4L4 12" stroke="#858481" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"></path>
-        <path d="M4 4L12 12" stroke="#858481" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"></path>
-      </svg>
-    </div>
-
-    <!-- footer-left -->
-    <div class="footer-left">
-      <a href="https://manus.im/" class="logo-wrapper" target="_blank">
-        <!-- logo -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 25 26" fill="none">
-          <path d="M17.7991 24.2474C19.5101 23.1618 20.6932 17.3398 20.4329 15.6061C20.4329 15.6061 20.1617 14.6753 19.5 14.6753C18.8382 14.6753 18.5629 15.3725 18.5629 15.3725C18.5629 15.3725 18.3887 16.0162 18.1153 16.8266C17.6925 18.0803 17.5146 19.6272 16.4117 20.0189C15.3088 20.4106 14.2059 20.04 14.2059 20.04C14.9558 22.8843 16.0881 25.333 17.7991 24.2474Z" fill="#34322D"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.6743 13.2405C9.04571 13.311 8.71461 13.5486 8.60292 13.6603C8.16174 14.1015 7.94115 14.5427 7.94115 14.7633C7.94115 14.9839 7.4222 13.7306 7.30817 13.6132C6.96868 13.2636 6.97688 12.7049 7.32648 12.3655C7.81725 11.8889 8.61987 11.583 9.47769 11.4868C10.3674 11.3871 11.4224 11.4982 12.49 11.9711C13.736 12.5231 14.4033 13.6867 14.6553 14.7502C14.7833 15.2901 14.816 15.8448 14.7504 16.3504C14.6868 16.8412 14.5192 17.366 14.1707 17.7655C13.4447 18.5976 12.3738 18.5039 11.7945 18.381C11.4681 18.3118 11.1802 18.2101 10.9777 18.1284C10.875 18.0869 10.7906 18.0492 10.7301 18.0208C10.6997 18.0066 10.6751 17.9947 10.657 17.9857C10.6479 17.9812 10.6404 17.9774 10.6345 17.9744L10.627 17.9706L10.6242 17.9691L10.6226 17.9683C10.6226 17.9683 10.6221 17.968 11.0296 17.1854L10.6221 17.968C10.1899 17.743 10.0219 17.2102 10.247 16.7779C10.4716 16.3465 11.0027 16.1784 11.4345 16.4015M11.4345 16.4015L11.4355 16.402L11.4345 16.4015ZM11.4345 16.4015L11.4408 16.4046C11.448 16.4082 11.4607 16.4144 11.4784 16.4227C11.514 16.4394 11.5688 16.4639 11.6378 16.4918C11.7787 16.5486 11.9648 16.6131 12.1608 16.6547C12.6262 16.7535 12.7935 16.6597 12.841 16.6053C12.8792 16.5615 12.9625 16.4153 13.0004 16.1234C13.0363 15.8464 13.0211 15.5069 12.9382 15.1572C12.7686 14.4416 12.3626 13.8448 11.7753 13.5846C11.0097 13.2455 10.271 13.1736 9.6743 13.2405" fill="#34322D"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M3.48757 4.47622C3.27296 4.91373 3.45365 5.44237 3.89116 5.65699C4.51956 5.96524 5.06489 6.26919 5.60482 6.87794C5.92818 7.2425 6.48585 7.27591 6.85042 6.95255C7.21499 6.6292 7.2484 6.07152 6.92504 5.70695C6.15564 4.83949 5.36367 4.41371 4.66834 4.07263C4.23083 3.85802 3.70218 4.03871 3.48757 4.47622Z" fill="#34322D"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.25659 1.90704C7.78383 2.02523 7.49639 2.50429 7.61458 2.97705C7.69716 3.30734 7.77416 3.58976 7.84466 3.8483C7.97958 4.34313 8.09065 4.75046 8.17121 5.23845C8.25058 5.71926 8.7047 6.04468 9.1855 5.96531C9.6663 5.88594 9.99172 5.43183 9.91235 4.95102C9.81714 4.37425 9.66887 3.82852 9.52006 3.28077C9.45416 3.03822 9.38816 2.79527 9.3266 2.54905C9.20841 2.07629 8.72935 1.78885 8.25659 1.90704Z" fill="#34322D"></path>
-          <path d="M12 5.41096C12.2206 4.52861 12.4412 3.86684 12.8427 3.20508" stroke="#34322D" stroke-width="1.76471" stroke-miterlimit="10" stroke-linecap="round"></path>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2411 9.60185C16.9915 9.95163 16.9918 9.95034 16.9918 9.95034L16.992 9.94902L16.9925 9.94635L16.9935 9.9408L16.9957 9.92888C16.9971 9.92058 16.9986 9.91155 17.0002 9.90182C17.0033 9.88239 17.0067 9.86001 17.0099 9.83496C17.0165 9.78521 17.0231 9.72305 17.0275 9.65108C17.0359 9.51241 17.0376 9.31091 17.0021 9.07721C16.9349 8.6345 16.6771 7.79535 15.7685 7.30889L15.5887 7.21266L15.3923 7.15829L14.9406 8.84156C15.3434 9.05719 15.2411 9.60185 15.2411 9.60185ZM14.9612 10.7124L15.2411 9.60185L16.9915 9.95163L16.9819 10.0029L16.6993 11.124C16.6449 11.3995 16.6378 11.5571 16.6408 11.6403C16.6432 11.7081 16.652 11.7303 16.6563 11.7412L16.6568 11.7425C16.6679 11.7706 16.6964 11.8316 16.8009 11.9901C16.8435 12.0547 16.8878 12.1194 16.9441 12.2018C16.9591 12.2237 16.9749 12.2467 16.9917 12.2714C17.0675 12.3824 17.1561 12.5133 17.2501 12.6597C17.8372 13.5747 17.8948 14.4528 17.8917 15.0155C17.8917 15.0238 17.8916 15.032 17.8916 15.0402C17.9617 15.0642 18.0363 15.0885 18.1154 15.1137C18.1416 15.1221 18.1762 15.133 18.2126 15.1445C18.2637 15.1606 18.3181 15.1778 18.357 15.1903C18.4335 15.2148 18.5312 15.2467 18.6257 15.2819C18.6915 15.3064 18.7546 15.3309 18.814 15.3555C18.8709 15.3791 18.9405 15.4094 19.0137 15.4463C19.0705 15.475 19.1629 15.5241 19.2675 15.5966L20.1869 15.9923L20.1736 17.1701C20.1658 17.8626 19.8872 18.5926 19.6896 19.0446C19.4717 19.5429 19.1838 20.0743 18.9189 20.4275C18.5488 20.9208 18.1295 21.4417 17.625 21.7748C17.3276 21.9711 16.9685 22.1272 16.5448 22.1784C16.1673 22.2241 15.8406 22.1735 15.6006 22.1151L15.5298 22.1006C15.4587 22.086 15.3569 22.065 15.2328 22.0391C14.9851 21.9876 14.6474 21.9165 14.2893 21.8387C13.629 21.6953 12.734 21.4947 12.3119 21.3547L12.2814 21.3445L12.2512 21.3333C12.064 21.2638 11.7474 21.1858 11.2231 21.0663C11.1914 21.059 11.1591 21.0517 11.1262 21.0442C10.6738 20.9412 10.1171 20.8145 9.58993 20.6549C9.04393 20.4895 8.36861 20.2436 7.79518 19.8429C7.19331 19.4223 6.50905 18.6806 6.47094 17.5681C6.46524 17.4016 6.46906 17.2406 6.47936 17.0879C6.20834 16.7941 5.98086 16.4101 5.8659 15.9183C5.75389 15.4392 5.81584 15.0144 5.89442 14.7163C5.97321 14.4174 6.0929 14.1561 6.19292 13.9608C6.22668 13.8949 6.2617 13.8299 6.29664 13.7671C5.96579 13.6627 5.59209 13.5337 5.22839 13.3786C4.75338 13.1762 4.07939 12.8421 3.57621 12.3029C3.30521 12.0124 3.02145 11.5962 2.90672 11.0519C2.78666 10.4824 2.88642 9.93592 3.12022 9.468C3.68936 8.32897 4.77648 7.92654 5.74338 7.89172C6.61646 7.86028 7.5455 8.10459 8.37793 8.39654C9.13636 8.66254 10.2219 9.15731 11.1441 9.58826C11.4478 9.09019 11.8482 8.52738 12.2272 8.07284L12.3025 7.98254L12.3897 7.90323C13.0418 7.30964 13.7744 7.11007 14.3327 7.06726C14.6063 7.04628 14.842 7.06194 15.0182 7.08482C15.1073 7.09639 15.1841 7.11017 15.2465 7.1232C15.2777 7.12974 15.3056 7.13615 15.33 7.14209C15.3421 7.14506 15.3534 7.14792 15.3638 7.15063L15.3787 7.15458L15.3857 7.15647L15.389 7.15738L15.3907 7.15784C15.3907 7.15784 15.3923 7.15829 14.9406 8.84156C14.9406 8.84156 14.2363 8.64656 13.6308 9.18107C13.6247 9.18645 13.6186 9.19191 13.6125 9.19744C13.5937 9.21996 13.5749 9.24277 13.5561 9.26583C13.529 9.29901 13.5018 9.33272 13.4747 9.36686C13.4667 9.37688 13.4588 9.38694 13.4508 9.39704C12.8465 10.1637 12.8824 10.484 11.7793 11.8077C11.7793 11.8077 11.2047 11.5416 10.861 11.38C10.6252 11.2692 10.376 11.152 10.122 11.0339C9.30257 10.6529 8.43387 10.2622 7.80874 10.043C6.26964 9.50318 5.13491 9.43466 4.72074 10.2636C4.17438 11.357 6.39299 11.9906 7.50784 12.3089C7.74261 12.376 7.92844 12.429 8.02918 12.4695C8.60097 12.699 8.64087 13.1595 8.47059 13.5722C8.37122 13.8131 8.31458 13.9488 8.02941 14.234C7.58824 14.6752 7.51589 15.1976 7.60014 15.558C7.64232 15.7384 7.72576 15.8696 7.82495 15.965C8.09106 16.221 8.4705 16.2195 8.4705 16.2195C8.4705 16.2195 8.22583 16.8447 8.24975 17.5431C8.25502 17.6968 8.29636 17.8367 8.36761 17.9646C8.79059 18.724 10.2676 19.0605 11.5086 19.3431C12.0298 19.4618 12.5094 19.5711 12.8517 19.6982C13.4654 19.9018 15.9702 20.4106 15.9702 20.4106C16.4324 20.5319 16.719 20.3851 17.4792 19.3717C17.7949 18.9509 18.3866 17.7603 18.3939 17.1168C18.2979 17.0755 18.2911 17.0611 18.2844 17.0466C18.2751 17.0267 18.2658 17.0068 18.0231 16.9163C17.9419 16.8861 17.8333 16.8518 17.7089 16.8126C17.1914 16.6493 16.402 16.4004 16.191 15.9989C16.0886 15.804 16.0967 15.5424 16.1061 15.2366C16.1208 14.761 16.1387 14.1783 15.7499 13.5724C15.6545 13.4236 15.5629 13.2898 15.4773 13.1646C14.9897 12.4518 14.6939 12.0193 14.9612 10.7124ZM6.80826 12.865C6.80939 12.8618 6.80896 12.8625 6.80755 12.8669L6.80826 12.865ZM17.8827 15.5767C17.8827 15.5767 17.8827 15.5698 17.8813 15.5579C17.8818 15.571 17.8827 15.5767 17.8827 15.5767Z" fill="#34322D"></path>
-        </svg>
-        <!-- logo-name -->
-        <span class="logo-name">
-          Made with Manus
-        </span>
-      </a>
-      <a href="https://manus.im/invitation?from=space" class="footer-button" target="_blank" style="margin-left: auto;">
-        Create my website
-      </a>
-    </div>
-  </div>
-
-  <script>
-    const iframe = document.querySelector("iframe")
-    document.querySelector(".page-footer").style.opacity = "1"
-    document.querySelector(".page-footer-mobile").style.opacity = "1"
-
-    fetch('https://jfvyzrob.usercontents.app/').then(async (res) => {
-      const html = await res.text()
-      // get iframe title
-      const domParser = new DOMParser()
-      const doc = domParser.parseFromString(html, "text/html")
-      const title = doc.querySelector("title")?.innerText
-      const favicon = doc.querySelector("link[rel='icon']")?.href
-      if (title) {
-        // set titleavicon to page
-        document.title = title
-      }
-      if (favicon) {
-        const element = document.createElement("link")
-        element.setAttribute("rel", "icon")
-        element.setAttribute("href", favicon)
-        document.head.appendChild(element)
-      }
-    })
-
-    function handleClick() {
-      localStorage.setItem('embedClosed', 'true')
-      document.querySelector(".page-footer").style.display = 'none'
-      document.querySelector(".page-footer-mobile").style.display = 'none'
-    }
-
-    const els = document.querySelectorAll(".close")
-    els.forEach((el) => {
-      el.addEventListener('click', handleClick)
-    })
-
-    if (localStorage.getItem('embedClosed')) {
-      handleClick()
-    }
-  </script>
-
-  <script defer="" data-domain="manus.space" src="https://plausible.io/js/script.file-downloads.hash.outbound-links.pageview-props.revenue.tagged-events.js"></script>
-  <script>window.plausible = window.plausible || function () { (window.plausible.q = window.plausible.q || []).push(arguments) }</script>
+    <header>
+        <div class="container">
+            <h1>PRAKTIJKLESSEN SYNTRA MICROBROUWER</h1><br>
+          <h2>Joost De Bock</h2>
+            <p>2024 / 2025 - Docent: Geert Welleman</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#brouwsel-nr01">Brouwsel Nr01</a></li>
+                <li><a href="#syntra-tripel">Syntra Tripel</a></li>
+                <li><a href="#syntra-ipa">Syntra IPA</a></li>
+                <li><a href="#syntra-pils">Syntra Pils</a></li>
+                <li><a href="#conclusie">Conclusie</a></li>
+                <li><a href="#interactive">Interactieve Tools</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="brouwsel-nr01" class="beer-info">
+            <h2>BROUWSEL NR01 - PALE ALE TRIPEL</h2>
+            
+            <div class="beer-specs">
+                <div class="beer-spec">
+                    <strong>Brouwvolume</strong>
+                    <span id="brouwvolume-nr01">25L</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Plato</strong>
+                    <span id="plato-nr01">18.4°</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Alcohol</strong>
+                    <span id="alcohol-nr01">4.1%</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>IBU</strong>
+                    <span id="ibu-nr01">23</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>EBC</strong>
+                    <span id="ebc-nr01">17.1</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>pH</strong>
+                    <span id="ph-nr01">5.7</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Rendement</strong>
+                    <span id="rendement-nr01">74.8%</span>
+                </div>
+            </div>
+            
+            <h3>Ingrediënten</h3>
+            <ul>
+                <li>Pale Ale mout: <span id="pale-ale-mout-nr01">67%</span> (5.7 kg)</li>
+                <li>Tarwemout: <span id="tarwemout-nr01">23%</span> (1.74 kg)</li>
+                <li>Biscuitmout: <span id="biscuitmout-nr01">6%</span> (0.46 kg)</li>
+                <li>Rietsuiker: <span id="rietsuiker-nr01">5%</span> (0.3 kg)</li>
+                <li>Hop:
+                    <ul>
+                        <li>Haltertau Perle: <span id="haltertau-nr01">52%</span> (24g)</li>
+                        <li>Saaz: <span id="saaz-nr01">48%</span> (22.5g)</li>
+                    </ul>
+                </li>
+                <li>Gist: SafAle BE-256 (Abbaye)</li>
+            </ul>
+            
+            <h3>Brouwproces</h3>
+            <p>Het brouwproces voor Brouwsel Nr01 (Pale Ale Tripel) werd uitgevoerd volgens het standaard protocol. Het maischschema bestond uit verschillende stappen: 15 minuten inmaischen bij 54°C, 10 minuten aanhouden op 58°C, 35 minuten op 62°C voor β-amylase activiteit, en 5 minuten op 78°C om de α-amylase te stoppen.</p>
+            
+            <p>Voor het maischen werd 30L water gebruikt, en voor het spoelen nog eens 11.8L. Na de filtratie werd een wort met een dichtheid van 13° plato verkregen, wat iets lager was dan de berekende 13.8° plato volgens Brouwhulp.</p>
+            
+            <p>Het kookproces duurde 90 minuten, waarbij op 85 minuten de bitterhop Haltertau werd toegevoegd, op 15 minuten de aromahop Saaz samen met 200g rietsuiker, en op 2 minuten gekneusde koriander en nog eens 100g rietsuiker.</p>
+            
+            <p>Na het koelen tot ongeveer 25°C werden 2 pakjes droge gist SafAle BE-256 toegevoegd. De fermentatie vond plaats gedurende 14 dagen bij 21°C in een warme kamer, gevolgd door een nagisting van 14 dagen bij 22°C en 14 dagen bij 3°C.</p>
+            
+            <h3>Tussentijdse analyse</h3>
+            <p>Tijdens de tussentijdse analyse werd een hoog eind-SG opgemerkt. Dit kan verschillende oorzaken hebben:</p>
+            
+            <ol>
+                <li>Het maischschema toonde een lange en mogelijk te warme rust in de α-amylasefase</li>
+                <li>Door langere tijd op hogere temperatuur zijn waarschijnlijk teveel onvergistbare dextrines gevormd</li>
+                <li>Het recept bevatte relatief veel tarwemout (23.2%) en ambermout (6.1%)</li>
+                <li>Deze mouten dragen bij aan een voller mondgevoel en complexe suikers die minder goed vergisten</li>
+                <li>Er werd slechts 4% rietsuiker gebruikt, wat laag is voor een Tripel (normaal 6-10%)</li>
+                <li>De vergisting werd mogelijk te vroeg afgerond</li>
+                <li>De temperatuur werd later verhoogd naar 24°C voor een week extra vergisting</li>
+            </ol>
+            
+            <h3>Botteling</h3>
+            <p>Bij de botteling werd het alcoholgehalte geschat op ongeveer 6.5%. Er werd 200g rietsuiker toegevoegd voor hergisting op fles, samen met 1,75g bottelgist om een goede hergisting te verzekeren.</p>
+            
+            <h3>Degustatie</h3>
+            <p>Bij de eerste degustatie van Brouwsel Nr01 werden twee opvallende problemen vastgesteld: er was weinig koolzuurgas aanwezig en er was bijna geen schuimkraag te bespeuren. Deze kenmerken zijn niet wenselijk voor een Tripel, die normaal gesproken een levendige carbonatie en een stevige, romige schuimkraag zou moeten hebben.</p>
+            
+            <h4>Analyse van het koolzuurprobleem</h4>
+            <p>Het gebrek aan koolzuurgas kan verschillende oorzaken hebben. Op basis van het brouwproces en de ingrediënten van Brouwsel Nr01 zijn de volgende factoren waarschijnlijk van invloed geweest:</p>
+            
+            <ol>
+                <li><strong>Onvoldoende suikertoevoeging bij botteling</strong>: Voor een Tripel is een hoog koolzuurgehalte gewenst (5,8 - 7,4 g/L). De berekening voor de benodigde suiker is: (gewenst CO₂ - aanwezig CO₂) * 2 * aantal liters. Mogelijk was de toegevoegde hoeveelheid van 200g voor de gehele batch niet voldoende.</li>
+                <li><strong>Gistconditie ondanks toevoeging van bottelgist</strong>: Hoewel er 1,75g bottelgist werd toegevoegd, kan de effectiviteit hiervan beïnvloed zijn door de omstandigheden. Bij een hoog alcoholpercentage (8.1%) staat de gist onder druk, wat de hergisting op fles kan bemoeilijken, zelfs met verse bottelgist.</li>
+                <li><strong>Temperatuur na botteling</strong>: Als de flessen te snel na botteling koud zijn gezet, heeft de gist (inclusief de toegevoegde bottelgist) mogelijk niet voldoende tijd gehad om de toegevoegde suiker te vergisten. Voor een goede hergisting is minimaal 2-3 weken bij kamertemperatuur nodig.</li>
+                <li><strong>Hoog eindvergistingsgraad (SG)</strong>: De tussentijdse analyse toonde een hoog eind-SG, wat wijst op onvergistbare suikers. Dit kan betekenen dat zelfs met verse bottelgist, deze suikers moeilijk of niet vergistbaar waren.</li>
+            </ol>
+            
+            <h4>Analyse van het schuimkraagprobleem</h4>
+            <p>Het gebrek aan een goede schuimkraag hangt deels samen met het koolzuurprobleem, maar heeft ook eigen oorzaken:</p>
+            
+            <ol>
+                <li><strong>Maischschema</strong>: Het maischschema toonde een lange rust bij hogere temperaturen, wat kan leiden tot overmatige afbraak van eiwitten. Voor een goede schuimkraag zijn bepaalde eiwitten essentieel.</li>
+                <li><strong>Ingrediëntensamenstelling</strong>: Hoewel tarwemout (22.9%) normaal gesproken bijdraagt aan een betere schuimstabiliteit, kan het hoge alcoholgehalte (8.1%) dit effect tenietdoen. Alcohol werkt destabiliserend op de schuimkraag.</li>
+                <li><strong>Vergistingstemperatuur</strong>: De fermentatie vond plaats bij 21°C, wat aan de hoge kant is. Bij hogere vergistingstemperaturen worden meer hogere alcoholen gevormd, die een negatief effect hebben op de schuimkraag.</li>
+                <li><strong>pH-waarde</strong>: De pH-waarde van 5.7 is relatief hoog voor een bier. Een lagere pH (4.0-4.5) zou gunstiger zijn voor de schuimstabiliteit.</li>
+            </ol>
+            
+            <h3>Aanbevelingen voor verbetering</h3>
+            <p>Om de problemen met koolzuurgas en schuimkraag in toekomstige brouwsels te verhelpen, worden de volgende aanpassingen aanbevolen:</p>
+            
+            <h4>Voor betere carbonatie</h4>
+            <ul>
+                <li>Zorg voor optimale omstandigheden voor de bottelgist: bewaar de flessen bij de juiste temperatuur</li>
+                <li>Laat de flessen minimaal 2-3 weken bij kamertemperatuur (20-22°C) staan voor hergisting</li>
+                <li>Overweeg een meer alcohol-tolerante bottelgist te gebruiken bij hoge alcoholpercentages</li>
+            </ul>
+            
+            <h4>Voor betere schuimkraag</h4>
+            <ul>
+                <li>Pas het maischschema aan: verkort de rust bij hogere temperaturen en maisch in op minimaal 60°C</li>
+                <li>Verhoog het percentage tarwemout of voeg havervlokken toe (5-10%) voor betere schuimstabiliteit</li>
+                <li>Verlaag de vergistingstemperatuur naar 18-20°C om de vorming van hogere alcoholen te beperken</li>
+                <li>Streef naar een lagere pH-waarde (4.0-4.5) in het eindproduct</li>
+            </ul>
+            
+            <h4>Algemene verbeteringen</h4>
+            <ul>
+                <li>Verhoog het percentage rietsuiker naar 6-10%, wat typisch is voor een Tripel</li>
+                <li>Controleer de waterkwaliteit en pas deze indien nodig aan</li>
+                <li>Zorg voor een goede temperatuurcontrole tijdens de vergisting</li>
+                <li>Gebruik een gist die beter presteert bij hogere alcoholpercentages</li>
+            </ul>
+        </section>
+        
+        <section id="syntra-tripel" class="beer-info">
+            <h2>SYNTRA TRIPEL</h2>
+            
+            <div class="beer-specs">
+                <div class="beer-spec">
+                    <strong>Brouwvolume</strong>
+                    <span id="brouwvolume-tripel">25L</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Plato</strong>
+                    <span id="plato-tripel">18°</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Alcohol</strong>
+                    <span id="alcohol-tripel">4.1%</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>IBU</strong>
+                    <span id="ibu-tripel">25</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>EBC</strong>
+                    <span id="ebc-tripel">10</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>pH</strong>
+                    <span id="ph-tripel">5.5</span>
+                </div>
+            </div>
+            
+            <h3>Ingrediënten</h3>
+            <ul>
+                <li>Pilsmout: <span id="pilsmout-tripel">80%</span></li>
+                <li>Tarwemout: <span id="tarwemout-tripel">10%</span></li>
+                <li>Rietsuiker: <span id="rietsuiker-tripel">10%</span></li>
+                <li>Hop:
+                    <ul>
+                        <li>Saaz</li>
+                        <li>Hallertau</li>
+                    </ul>
+                </li>
+                <li>Gist: Abdijgist</li>
+            </ul>
+            
+            <h3>Brouwproces</h3>
+            <p>Het brouwproces voor de Syntra Tripel volgde een traditioneel Belgisch schema met een stapsgewijze infusie. De vergisting werd uitgevoerd bij een gecontroleerde temperatuur van 20°C gedurende 14 dagen, gevolgd door een koude lagering van 2 weken.</p>
+            
+            <h3>Analyse</h3>
+            <p>De Syntra Tripel vertoonde een goede vergistingsgraad en een helder, goudgeel uiterlijk. De schuimkraag was stevig en persistent, wat wijst op een goede eiwitstructuur en carbonatie. Het alcoholpercentage van 8.5% was goed in balans met de zoetheid van het bier.</p>
+        </section>
+        
+        <section id="syntra-ipa" class="beer-info">
+            <h2>SYNTRA IPA</h2>
+            
+            <div class="beer-specs">
+                <div class="beer-spec">
+                    <strong>Brouwvolume</strong>
+                    <span id="brouwvolume-ipa">25L</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Plato</strong>
+                    <span id="plato-ipa">15°</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Alcohol</strong>
+                    <span id="alcohol-ipa">6.5%</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>IBU</strong>
+                    <span id="ibu-ipa">60</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>EBC</strong>
+                    <span id="ebc-ipa">15</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>pH</strong>
+                    <span id="ph-ipa">5.3</span>
+                </div>
+            </div>
+            
+            <h3>Ingrediënten</h3>
+            <ul>
+                <li>Pale Ale mout: <span id="pale-ale-mout-ipa">85%</span></li>
+                <li>Caramout: <span id="caramout-ipa">10%</span></li>
+                <li>Tarwemout: <span id="tarwemout-ipa">5%</span></li>
+                <li>Hop:
+                    <ul>
+                        <li>Cascade</li>
+                        <li>Centennial</li>
+                        <li>Citra</li>
+                    </ul>
+                </li>
+                <li>Gist: Amerikaanse ale gist</li>
+            </ul>
+            
+            <h3>Brouwproces</h3>
+            <p>De Syntra IPA werd gebrouwen met een enkele infusiemaisch bij 65°C. De hopgift was verdeeld over bitterhop (begin kook), smaakhop (midden kook) en aromahop (einde kook en dry-hopping). De vergisting vond plaats bij 18°C gedurende 10 dagen, gevolgd door dry-hopping gedurende 5 dagen.</p>
+            
+            <h3>Analyse</h3>
+            <p>De Syntra IPA kenmerkte zich door een uitgesproken hopkarakter met citrus- en dennentoetsen. De bitterheid was prominent maar in balans met de moutigheid. De carbonatie was medium en de schuimkraag was wit en persistent.</p>
+        </section>
+        
+        <section id="syntra-pils" class="beer-info">
+            <h2>SYNTRA PILS</h2>
+            
+            <div class="beer-specs">
+                <div class="beer-spec">
+                    <strong>Brouwvolume</strong>
+                    <span id="brouwvolume-pils">25L</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Plato</strong>
+                    <span id="plato-pils">12°</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>Alcohol</strong>
+                    <span id="alcohol-pils">5%</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>IBU</strong>
+                    <span id="ibu-pils">30</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>EBC</strong>
+                    <span id="ebc-pils">7</span>
+                </div>
+                <div class="beer-spec">
+                    <strong>pH</strong>
+                    <span id="ph-pils">5.2</span>
+                </div>
+            </div>
+            
+            <h3>Ingrediënten</h3>
+            <ul>
+                <li>Pilsmout: <span id="pilsmout-pils">95%</span></li>
+                <li>Carapils: <span id="carapils-pils">5%</span></li>
+                <li>Hop:
+                    <ul>
+                        <li>Saaz</li>
+                        <li>Hallertau</li>
+                    </ul>
+                </li>
+                <li>Gist: Lager gist</li>
+            </ul>
+            
+            <h3>Brouwproces</h3>
+            <p>De Syntra Pils werd gebrouwen volgens een traditioneel decoctieschema. Na de hoofdvergisting bij 10°C gedurende 10 dagen, werd het bier gelagerd bij 0°C gedurende 4 weken voor een optimale smaakrijping en helderheid.</p>
+            
+            <h3>Analyse</h3>
+            <p>De Syntra Pils was helder en strogeel van kleur. Het vertoonde een fijne, witte schuimkraag en een delicate hopbitterheid. De smaak was schoon en verfrissend, met een droge afdronk kenmerkend voor een goede Pilsner.</p>
+        </section>
+        
+        <section id="conclusie" class="beer-info">
+            <h2>CONCLUSIE</h2>
+            
+            <p>De praktijklessen bij Syntra Microbrouwer hebben geleid tot vier verschillende bierstijlen, elk met hun eigen karakteristieken en uitdagingen. Brouwsel Nr01 (Pale Ale Tripel) vertoonde problemen met carbonatie en schuimvorming, wat waardevolle lessen opleverde voor toekomstige brouwsels. De Syntra Tripel, IPA en Pils waren over het algemeen succesvol, met goede balans en typische kenmerken voor hun respectievelijke stijlen.</p>
+            
+            <p>Het brouwproces is een complexe interactie van ingrediënten, temperaturen, tijden en technieken. Kleine variaties in het proces kunnen significante effecten hebben op het eindresultaat. Door aandacht te besteden aan details zoals maischschema, vergistingstemperatuur, en bottelprocedures, kan de kwaliteit van huisgebrouwen bier aanzienlijk worden verbeterd.</p>
+            
+            <p>De ervaring met Brouwsel Nr01 toont aan dat problemen met carbonatie en schuimvorming vaak te wijten zijn aan meerdere factoren, waaronder ingrediëntenkeuze, procesparameters en nabehandeling. Door deze factoren systematisch te analyseren en aan te passen, kunnen toekomstige brouwsels worden geoptimaliseerd voor betere resultaten.</p>
+        </section>
+        
+        <section id="interactive" class="interactive-section">
+            <h2>INTERACTIEVE BROUWTOOLS</h2>
+            
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="nr01">Brouwsel Nr01</button>
+                <button class="tab-button" data-tab="tripel">Syntra Tripel</button>
+                <button class="tab-button" data-tab="ipa">Syntra IPA</button>
+                <button class="tab-button" data-tab="pils">Syntra Pils</button>
+            </div>
+            
+            <!-- Brouwsel Nr01 Tab -->
+            <div id="tab-nr01" class="tab-content active">
+                <h3>Recept Aanpassen - Brouwsel Nr01 (Pale Ale Tripel)</h3>
+                <p>Pas de parameters aan om te zien hoe dit het bier beïnvloedt. De resultaten worden automatisch bijgewerkt.</p>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Pale Ale mout (%):</div>
+                        <input type="range" min="50" max="80" value="66.5" class="slider" id="pale-ale-slider-nr01">
+                        <div class="slider-value" id="pale-ale-value-nr01">67%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Tarwemout (%):</div>
+                        <input type="range" min="5" max="30" value="22.9" class="slider" id="tarwe-slider-nr01">
+                        <div class="slider-value" id="tarwe-value-nr01">23%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Biscuitmout (%):</div>
+                        <input type="range" min="0" max="15" value="6" class="slider" id="biscuit-slider-nr01">
+                        <div class="slider-value" id="biscuit-value-nr01">6%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Rietsuiker (%):</div>
+                        <input type="range" min="0" max="15" value="4.6" class="slider" id="suiker-slider-nr01">
+                        <div class="slider-value" id="suiker-value-nr01">5%</div>
+                    </div>
+                </div>
+                
+                <h3>Brouwproces Parameters</h3>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Vergistingstemp (°C):</div>
+                        <input type="range" min="15" max="25" value="21" class="slider" id="temp-slider-nr01">
+                        <div data-lastpass-icon-root="" style="position: relative !important; height: 0px !important; width: 0px !important; float: left !important;"></div><div class="slider-value" id="temp-value-nr01">21°C</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Bottelsuiker (g/L):</div>
+                        <input type="range" min="4" max="10" value="8" step="0.5" class="slider" id="bottelsuiker-slider-nr01">
+                        <div class="slider-value" id="bottelsuiker-value-nr01">8 g/L</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Bottelgist (g):</div>
+                        <input type="range" min="0" max="5" value="1.75" step="0.25" class="slider" id="bottelgist-slider-nr01">
+                        <div class="slider-value" id="bottelgist-value-nr01">1.75g</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">pH:</div>
+                        <input type="range" min="4.0" max="6.0" value="5.7" step="0.1" class="slider" id="ph-slider-nr01">
+                        <div class="slider-value" id="ph-value-nr01">5.7</div>
+                    </div>
+                </div>
+                
+                <div class="result-display">
+                    <h3>Verwachte Resultaten - Brouwsel Nr01</h3>
+                    <table>
+                        <tbody><tr>
+                            <th>Parameter</th>
+                            <th>Waarde</th>
+                            <th>Evaluatie</th>
+                        </tr>
+                        <tr>
+                            <td>Alcoholpercentage</td>
+                            <td id="result-alcohol-nr01">4.1%</td>
+                            <td id="eval-alcohol-nr01">Laag voor een Tripel</td>
+                        </tr>
+                        <tr>
+                            <td>Koolzuurgehalte</td>
+                            <td id="result-co2-nr01">Hoog</td>
+                            <td id="eval-co2-nr01">Ideaal voor een Tripel</td>
+                        </tr>
+                        <tr>
+                            <td>Schuimkraag</td>
+                            <td id="result-schuim-nr01">Minimaal</td>
+                            <td id="eval-schuim-nr01">Onvoldoende voor een Tripel</td>
+                        </tr>
+                        <tr>
+                            <td>Mondgevoel</td>
+                            <td id="result-mondgevoel-nr01">Medium</td>
+                            <td id="eval-mondgevoel-nr01">Goed voor een Tripel</td>
+                        </tr>
+                    </tbody></table>
+                    
+                    <h4>Aanbevelingen</h4>
+                    <p id="recommendations-nr01">Verhoog het percentage rietsuiker naar 6-10% voor een typische Tripel. Verlaag de pH naar 4.0-4.5 voor betere schuimstabiliteit. Verlaag de vergistingstemperatuur naar 18-20°C voor minder hogere alcoholen.</p>
+                </div>
+            </div>
+            
+            <!-- Syntra Tripel Tab -->
+            <div id="tab-tripel" class="tab-content">
+                <h3>Recept Aanpassen - Syntra Tripel</h3>
+                <p>Pas de parameters aan om te zien hoe dit het bier beïnvloedt. De resultaten worden automatisch bijgewerkt.</p>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Pilsmout (%):</div>
+                        <input type="range" min="60" max="90" value="80" class="slider" id="pils-slider-tripel">
+                        <div class="slider-value" id="pils-value-tripel">80%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Tarwemout (%):</div>
+                        <input type="range" min="0" max="20" value="10" class="slider" id="tarwe-slider-tripel">
+                        <div class="slider-value" id="tarwe-value-tripel">10%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Rietsuiker (%):</div>
+                        <input type="range" min="0" max="20" value="10" class="slider" id="suiker-slider-tripel">
+                        <div class="slider-value" id="suiker-value-tripel">10%</div>
+                    </div>
+                </div>
+                
+                <h3>Brouwproces Parameters</h3>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Vergistingstemp (°C):</div>
+                        <input type="range" min="15" max="25" value="20" class="slider" id="temp-slider-tripel">
+                        <div class="slider-value" id="temp-value-tripel">20°C</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Bottelsuiker (g/L):</div>
+                        <input type="range" min="4" max="10" value="8" step="0.5" class="slider" id="bottelsuiker-slider-tripel">
+                        <div class="slider-value" id="bottelsuiker-value-tripel">8 g/L</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">pH:</div>
+                        <input type="range" min="4.0" max="6.0" value="5.5" step="0.1" class="slider" id="ph-slider-tripel">
+                        <div class="slider-value" id="ph-value-tripel">5.5</div>
+                    </div>
+                </div>
+                
+                <div class="result-display">
+                    <h3>Verwachte Resultaten - Syntra Tripel</h3>
+                    <table>
+                        <tbody><tr>
+                            <th>Parameter</th>
+                            <th>Waarde</th>
+                            <th>Evaluatie</th>
+                        </tr>
+                        <tr>
+                            <td>Alcoholpercentage</td>
+                            <td id="result-alcohol-tripel">4.1%</td>
+                            <td id="eval-alcohol-tripel">Laag voor een Tripel</td>
+                        </tr>
+                        <tr>
+                            <td>Koolzuurgehalte</td>
+                            <td id="result-co2-tripel">Hoog</td>
+                            <td id="eval-co2-tripel">Ideaal voor een Tripel</td>
+                        </tr>
+                        <tr>
+                            <td>Schuimkraag</td>
+                            <td id="result-schuim-tripel">Minimaal</td>
+                            <td id="eval-schuim-tripel">Onvoldoende voor een Tripel</td>
+                        </tr>
+                        <tr>
+                            <td>Mondgevoel</td>
+                            <td id="result-mondgevoel-tripel">Medium</td>
+                            <td id="eval-mondgevoel-tripel">Goed voor een Tripel</td>
+                        </tr>
+                    </tbody></table>
+                    
+                    <h4>Aanbevelingen</h4>
+                    <p id="recommendations-tripel">Verlaag de pH naar 4.0-4.5 voor betere schuimstabiliteit.</p>
+                </div>
+            </div>
+            
+            <!-- Syntra IPA Tab -->
+            <div id="tab-ipa" class="tab-content">
+                <h3>Recept Aanpassen - Syntra IPA</h3>
+                <p>Pas de parameters aan om te zien hoe dit het bier beïnvloedt. De resultaten worden automatisch bijgewerkt.</p>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Pale Ale mout (%):</div>
+                        <input type="range" min="70" max="95" value="85" class="slider" id="pale-ale-slider-ipa">
+                        <div class="slider-value" id="pale-ale-value-ipa">85%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Caramout (%):</div>
+                        <input type="range" min="0" max="20" value="10" class="slider" id="cara-slider-ipa">
+                        <div class="slider-value" id="cara-value-ipa">10%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Tarwemout (%):</div>
+                        <input type="range" min="0" max="15" value="5" class="slider" id="tarwe-slider-ipa">
+                        <div class="slider-value" id="tarwe-value-ipa">5%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">IBU:</div>
+                        <input type="range" min="30" max="100" value="60" class="slider" id="ibu-slider-ipa">
+                        <div class="slider-value" id="ibu-value-ipa">60</div>
+                    </div>
+                </div>
+                
+                <h3>Brouwproces Parameters</h3>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Vergistingstemp (°C):</div>
+                        <input type="range" min="15" max="22" value="18" class="slider" id="temp-slider-ipa">
+                        <div class="slider-value" id="temp-value-ipa">18°C</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Dry-hopping (dagen):</div>
+                        <input type="range" min="0" max="14" value="5" class="slider" id="dryhop-slider-ipa">
+                        <div class="slider-value" id="dryhop-value-ipa">5 dagen</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">pH:</div>
+                        <input type="range" min="4.0" max="6.0" value="5.3" step="0.1" class="slider" id="ph-slider-ipa">
+                        <div class="slider-value" id="ph-value-ipa">5.3</div>
+                    </div>
+                </div>
+                
+                <div class="result-display">
+                    <h3>Verwachte Resultaten - Syntra IPA</h3>
+                    <table>
+                        <tbody><tr>
+                            <th>Parameter</th>
+                            <th>Waarde</th>
+                            <th>Evaluatie</th>
+                        </tr>
+                        <tr>
+                            <td>Alcoholpercentage</td>
+                            <td id="result-alcohol-ipa">6.5%</td>
+                            <td id="eval-alcohol-ipa">Goed voor een IPA</td>
+                        </tr>
+                        <tr>
+                            <td>Hopkarakter</td>
+                            <td id="result-hop-ipa">Uitgesproken</td>
+                            <td id="eval-hop-ipa">Ideaal voor een IPA</td>
+                        </tr>
+                        <tr>
+                            <td>Bitterheid</td>
+                            <td id="result-bitter-ipa">Hoog</td>
+                            <td id="eval-bitter-ipa">Goed voor een IPA</td>
+                        </tr>
+                        <tr>
+                            <td>Mondgevoel</td>
+                            <td id="result-mondgevoel-ipa">Medium</td>
+                            <td id="eval-mondgevoel-ipa">Goed voor een IPA</td>
+                        </tr>
+                    </tbody></table>
+                    
+                    <h4>Aanbevelingen</h4>
+                    <p id="recommendations-ipa">De huidige parameters lijken goed voor een Amerikaanse IPA met uitgesproken hopkarakter.</p>
+                </div>
+            </div>
+            
+            <!-- Syntra Pils Tab -->
+            <div id="tab-pils" class="tab-content">
+                <h3>Recept Aanpassen - Syntra Pils</h3>
+                <p>Pas de parameters aan om te zien hoe dit het bier beïnvloedt. De resultaten worden automatisch bijgewerkt.</p>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Pilsmout (%):</div>
+                        <input type="range" min="80" max="100" value="95" class="slider" id="pils-slider-pils">
+                        <div class="slider-value" id="pils-value-pils">95%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Carapils (%):</div>
+                        <input type="range" min="0" max="15" value="5" class="slider" id="carapils-slider-pils">
+                        <div class="slider-value" id="carapils-value-pils">5%</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">IBU:</div>
+                        <input type="range" min="20" max="45" value="30" class="slider" id="ibu-slider-pils">
+                        <div class="slider-value" id="ibu-value-pils">30</div>
+                    </div>
+                </div>
+                
+                <h3>Brouwproces Parameters</h3>
+                
+                <div class="slider-container">
+                    <div class="slider-row">
+                        <div class="slider-label">Vergistingstemp (°C):</div>
+                        <input type="range" min="8" max="15" value="10" class="slider" id="temp-slider-pils">
+                        <div class="slider-value" id="temp-value-pils">10°C</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">Lagering (weken):</div>
+                        <input type="range" min="1" max="8" value="4" class="slider" id="lager-slider-pils">
+                        <div class="slider-value" id="lager-value-pils">4 weken</div>
+                    </div>
+                    
+                    <div class="slider-row">
+                        <div class="slider-label">pH:</div>
+                        <input type="range" min="4.0" max="6.0" value="5.2" step="0.1" class="slider" id="ph-slider-pils">
+                        <div class="slider-value" id="ph-value-pils">5.2</div>
+                    </div>
+                </div>
+                
+                <div class="result-display">
+                    <h3>Verwachte Resultaten - Syntra Pils</h3>
+                    <table>
+                        <tbody><tr>
+                            <th>Parameter</th>
+                            <th>Waarde</th>
+                            <th>Evaluatie</th>
+                        </tr>
+                        <tr>
+                            <td>Alcoholpercentage</td>
+                            <td id="result-alcohol-pils">5%</td>
+                            <td id="eval-alcohol-pils">Ideaal voor een Pils</td>
+                        </tr>
+                        <tr>
+                            <td>Helderheid</td>
+                            <td id="result-helder-pils">Zeer helder</td>
+                            <td id="eval-helder-pils">Ideaal voor een Pils</td>
+                        </tr>
+                        <tr>
+                            <td>Bitterheid</td>
+                            <td id="result-bitter-pils">Medium</td>
+                            <td id="eval-bitter-pils">Goed voor een Pils</td>
+                        </tr>
+                        <tr>
+                            <td>Afdronk</td>
+                            <td id="result-afdronk-pils">Droog</td>
+                            <td id="eval-afdronk-pils">Ideaal voor een Pils</td>
+                        </tr>
+                    </tbody></table>
+                    
+                    <h4>Aanbevelingen</h4>
+                    <p id="recommendations-pils">De huidige parameters lijken optimaal voor een klassieke Pils met goede helderheid en verfrissende smaak.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>SYNTRA Microbrouwer - 2024/2025 - Joost De Bock</p>
+            <p>Docent: Geert Welleman - Microbrouwerij Muurken, Geraardsbergen</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Functie om alle sliders te initialiseren
+        function initializeSliders() {
+            // Tab navigatie
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const tabId = button.getAttribute('data-tab');
+                    
+                    // Verwijder active class van alle tabs
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Voeg active class toe aan geselecteerde tab
+                    button.classList.add('active');
+                    document.getElementById('tab-' + tabId).classList.add('active');
+                });
+            });
+            
+            // Initialiseer Brouwsel Nr01 sliders
+            initializeNr01Sliders();
+            
+            // Initialiseer Syntra Tripel sliders
+            initializeTripelSliders();
+            
+            // Initialiseer Syntra IPA sliders
+            initializeIPASliders();
+            
+            // Initialiseer Syntra Pils sliders
+            initializePilsSliders();
+        }
+        
+        // Functie om Brouwsel Nr01 sliders te initialiseren
+        function initializeNr01Sliders() {
+            // Recept sliders
+            const paleAleSlider = document.getElementById('pale-ale-slider-nr01');
+            const tarweSlider = document.getElementById('tarwe-slider-nr01');
+            const biscuitSlider = document.getElementById('biscuit-slider-nr01');
+            const suikerSlider = document.getElementById('suiker-slider-nr01');
+            
+            // Proces sliders
+            const tempSlider = document.getElementById('temp-slider-nr01');
+            const bottelsuikerSlider = document.getElementById('bottelsuiker-slider-nr01');
+            const bottelgistSlider = document.getElementById('bottelgist-slider-nr01');
+            const phSlider = document.getElementById('ph-slider-nr01');
+            
+            // Waarde displays
+            const paleAleValue = document.getElementById('pale-ale-value-nr01');
+            const tarweValue = document.getElementById('tarwe-value-nr01');
+            const biscuitValue = document.getElementById('biscuit-value-nr01');
+            const suikerValue = document.getElementById('suiker-value-nr01');
+            const tempValue = document.getElementById('temp-value-nr01');
+            const bottelsuikerValue = document.getElementById('bottelsuiker-value-nr01');
+            const bottelgistValue = document.getElementById('bottelgist-value-nr01');
+            const phValue = document.getElementById('ph-value-nr01');
+            
+            // Resultaat displays
+            const resultAlcohol = document.getElementById('result-alcohol-nr01');
+            const resultCO2 = document.getElementById('result-co2-nr01');
+            const resultSchuim = document.getElementById('result-schuim-nr01');
+            const resultMondgevoel = document.getElementById('result-mondgevoel-nr01');
+            const evalAlcohol = document.getElementById('eval-alcohol-nr01');
+            const evalCO2 = document.getElementById('eval-co2-nr01');
+            const evalSchuim = document.getElementById('eval-schuim-nr01');
+            const evalMondgevoel = document.getElementById('eval-mondgevoel-nr01');
+            const recommendations = document.getElementById('recommendations-nr01');
+            
+            // Elementen in de beer-specs
+            const paleAleMout = document.getElementById('pale-ale-mout-nr01');
+            const tarwemout = document.getElementById('tarwemout-nr01');
+            const biscuitmout = document.getElementById('biscuitmout-nr01');
+            const rietsuiker = document.getElementById('rietsuiker-nr01');
+            const alcohol = document.getElementById('alcohol-nr01');
+            const ph = document.getElementById('ph-nr01');
+            
+            // Event listeners voor recept sliders
+            paleAleSlider.addEventListener('input', updateRecipe);
+            tarweSlider.addEventListener('input', updateRecipe);
+            biscuitSlider.addEventListener('input', updateRecipe);
+            suikerSlider.addEventListener('input', updateRecipe);
+            
+            // Event listeners voor proces sliders
+            tempSlider.addEventListener('input', updateProcess);
+            bottelsuikerSlider.addEventListener('input', updateProcess);
+            bottelgistSlider.addEventListener('input', updateProcess);
+            phSlider.addEventListener('input', updateProcess);
+            
+            // Functie om recept bij te werken
+            function updateRecipe() {
+                // Update waarde displays
+                paleAleValue.textContent = paleAleSlider.value + '%';
+                tarweValue.textContent = tarweSlider.value + '%';
+                biscuitValue.textContent = biscuitSlider.value + '%';
+                suikerValue.textContent = suikerSlider.value + '%';
+                
+                // Update beer-specs
+                paleAleMout.textContent = paleAleSlider.value + '%';
+                tarwemout.textContent = tarweSlider.value + '%';
+                biscuitmout.textContent = biscuitSlider.value + '%';
+                rietsuiker.textContent = suikerSlider.value + '%';
+                
+                // Bereken alcohol op basis van ingrediënten
+                const totalExtract = parseFloat(paleAleSlider.value) * 0.8 + 
+                                    parseFloat(tarweSlider.value) * 0.8 + 
+                                    parseFloat(biscuitSlider.value) * 0.75 + 
+                                    parseFloat(suikerSlider.value) * 1.0;
+                
+                const estimatedAlcohol = (totalExtract * 0.05).toFixed(1);
+                resultAlcohol.textContent = estimatedAlcohol + '%';
+                alcohol.textContent = estimatedAlcohol + '%';
+                
+                // Evalueer alcohol
+                if (estimatedAlcohol < 7.5) {
+                    evalAlcohol.textContent = 'Laag voor een Tripel';
+                } else if (estimatedAlcohol > 9.5) {
+                    evalAlcohol.textContent = 'Hoog voor een Tripel';
+                } else {
+                    evalAlcohol.textContent = 'Ideaal voor een Tripel';
+                }
+                
+                // Evalueer mondgevoel op basis van tarwemout en biscuitmout
+                const moutFactor = parseFloat(tarweSlider.value) * 0.7 + parseFloat(biscuitSlider.value) * 0.5;
+                
+                if (moutFactor < 15) {
+                    resultMondgevoel.textContent = 'Licht';
+                    evalMondgevoel.textContent = 'Te licht voor een Tripel';
+                } else if (moutFactor < 20) {
+                    resultMondgevoel.textContent = 'Medium';
+                    evalMondgevoel.textContent = 'Goed voor een Tripel';
+                } else {
+                    resultMondgevoel.textContent = 'Vol';
+                    evalMondgevoel.textContent = 'Zeer vol voor een Tripel';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om proces bij te werken
+            function updateProcess() {
+                // Update waarde displays
+                tempValue.textContent = tempSlider.value + '°C';
+                bottelsuikerValue.textContent = bottelsuikerSlider.value + ' g/L';
+                bottelgistValue.textContent = bottelgistSlider.value + 'g';
+                phValue.textContent = phSlider.value;
+                
+                // Update beer-specs
+                ph.textContent = phSlider.value;
+                
+                // Evalueer CO2 op basis van bottelsuiker en bottelgist
+                const suikerFactor = parseFloat(bottelsuikerSlider.value);
+                const gistFactor = parseFloat(bottelgistSlider.value);
+                
+                if (suikerFactor < 6) {
+                    resultCO2.textContent = 'Laag';
+                    evalCO2.textContent = 'Onvoldoende voor een Tripel';
+                } else if (suikerFactor < 7.5) {
+                    resultCO2.textContent = 'Medium';
+                    evalCO2.textContent = 'Acceptabel voor een Tripel';
+                } else {
+                    resultCO2.textContent = 'Hoog';
+                    evalCO2.textContent = 'Ideaal voor een Tripel';
+                }
+                
+                // Evalueer schuimkraag op basis van tarwemout, pH en vergistingstemperatuur
+                const tarweFactor = parseFloat(tarweSlider.value);
+                const phFactor = 6.0 - parseFloat(phSlider.value); // Lagere pH is beter voor schuim
+                const tempFactor = 25 - parseFloat(tempSlider.value); // Lagere temp is beter voor schuim
+                
+                const schuimScore = tarweFactor * 0.3 + phFactor * 2 + tempFactor * 0.5;
+                
+                if (schuimScore < 10) {
+                    resultSchuim.textContent = 'Minimaal';
+                    evalSchuim.textContent = 'Onvoldoende voor een Tripel';
+                } else if (schuimScore < 15) {
+                    resultSchuim.textContent = 'Matig';
+                    evalSchuim.textContent = 'Acceptabel voor een Tripel';
+                } else {
+                    resultSchuim.textContent = 'Stevig';
+                    evalSchuim.textContent = 'Ideaal voor een Tripel';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om aanbevelingen bij te werken
+            function updateRecommendations() {
+                let recs = [];
+                
+                // Controleer suikergehalte
+                if (parseFloat(suikerSlider.value) < 6) {
+                    recs.push("Verhoog het percentage rietsuiker naar 6-10% voor een typische Tripel");
+                }
+                
+                // Controleer bottelsuiker
+                if (parseFloat(bottelsuikerSlider.value) < 6) {
+                    recs.push("Verhoog de hoeveelheid bottelsuiker naar 7-8 g/L voor betere carbonatie");
+                }
+                
+                // Controleer pH
+                if (parseFloat(phSlider.value) > 5.0) {
+                    recs.push("Verlaag de pH naar 4.0-4.5 voor betere schuimstabiliteit");
+                }
+                
+                // Controleer vergistingstemperatuur
+                if (parseFloat(tempSlider.value) > 20) {
+                    recs.push("Verlaag de vergistingstemperatuur naar 18-20°C voor minder hogere alcoholen");
+                }
+                
+                // Controleer tarwemout voor schuimstabiliteit
+                if (parseFloat(tarweSlider.value) < 15 && parseFloat(resultSchuim.textContent) !== 'Stevig') {
+                    recs.push("Overweeg het percentage tarwemout te verhogen voor betere schuimstabiliteit");
+                }
+                
+                // Als er geen aanbevelingen zijn
+                if (recs.length === 0) {
+                    recommendations.textContent = "De huidige parameters lijken optimaal voor een goede Tripel met voldoende carbonatie en schuimkraag.";
+                } else {
+                    recommendations.textContent = recs.join(". ") + ".";
+                }
+            }
+            
+            // Initialiseer alles bij het laden
+            updateRecipe();
+            updateProcess();
+        }
+        
+        // Functie om Syntra Tripel sliders te initialiseren
+        function initializeTripelSliders() {
+            // Recept sliders
+            const pilsSlider = document.getElementById('pils-slider-tripel');
+            const tarweSlider = document.getElementById('tarwe-slider-tripel');
+            const suikerSlider = document.getElementById('suiker-slider-tripel');
+            
+            // Proces sliders
+            const tempSlider = document.getElementById('temp-slider-tripel');
+            const bottelsuikerSlider = document.getElementById('bottelsuiker-slider-tripel');
+            const phSlider = document.getElementById('ph-slider-tripel');
+            
+            // Waarde displays
+            const pilsValue = document.getElementById('pils-value-tripel');
+            const tarweValue = document.getElementById('tarwe-value-tripel');
+            const suikerValue = document.getElementById('suiker-value-tripel');
+            const tempValue = document.getElementById('temp-value-tripel');
+            const bottelsuikerValue = document.getElementById('bottelsuiker-value-tripel');
+            const phValue = document.getElementById('ph-value-tripel');
+            
+            // Resultaat displays
+            const resultAlcohol = document.getElementById('result-alcohol-tripel');
+            const resultCO2 = document.getElementById('result-co2-tripel');
+            const resultSchuim = document.getElementById('result-schuim-tripel');
+            const resultMondgevoel = document.getElementById('result-mondgevoel-tripel');
+            const evalAlcohol = document.getElementById('eval-alcohol-tripel');
+            const evalCO2 = document.getElementById('eval-co2-tripel');
+            const evalSchuim = document.getElementById('eval-schuim-tripel');
+            const evalMondgevoel = document.getElementById('eval-mondgevoel-tripel');
+            const recommendations = document.getElementById('recommendations-tripel');
+            
+            // Elementen in de beer-specs
+            const pilsmout = document.getElementById('pilsmout-tripel');
+            const tarwemout = document.getElementById('tarwemout-tripel');
+            const rietsuiker = document.getElementById('rietsuiker-tripel');
+            const alcohol = document.getElementById('alcohol-tripel');
+            const ph = document.getElementById('ph-tripel');
+            
+            // Event listeners voor recept sliders
+            pilsSlider.addEventListener('input', updateRecipe);
+            tarweSlider.addEventListener('input', updateRecipe);
+            suikerSlider.addEventListener('input', updateRecipe);
+            
+            // Event listeners voor proces sliders
+            tempSlider.addEventListener('input', updateProcess);
+            bottelsuikerSlider.addEventListener('input', updateProcess);
+            phSlider.addEventListener('input', updateProcess);
+            
+            // Functie om recept bij te werken
+            function updateRecipe() {
+                // Zorg ervoor dat de percentages optellen tot 100%
+                let pilsPercentage = parseInt(pilsSlider.value);
+                let tarwePercentage = parseInt(tarweSlider.value);
+                let suikerPercentage = parseInt(suikerSlider.value);
+                
+                const total = pilsPercentage + tarwePercentage + suikerPercentage;
+                
+                if (total !== 100) {
+                    // Pas pilsmout aan om tot 100% te komen
+                    pilsPercentage = 100 - tarwePercentage - suikerPercentage;
+                    pilsSlider.value = pilsPercentage;
+                }
+                
+                // Update waarde displays
+                pilsValue.textContent = pilsPercentage + '%';
+                tarweValue.textContent = tarwePercentage + '%';
+                suikerValue.textContent = suikerPercentage + '%';
+                
+                // Update beer-specs
+                pilsmout.textContent = pilsPercentage + '%';
+                tarwemout.textContent = tarwePercentage + '%';
+                rietsuiker.textContent = suikerPercentage + '%';
+                
+                // Bereken alcohol op basis van ingrediënten
+                const totalExtract = pilsPercentage * 0.8 + 
+                                    tarwePercentage * 0.8 + 
+                                    suikerPercentage * 1.0;
+                
+                const estimatedAlcohol = (totalExtract * 0.05).toFixed(1);
+                resultAlcohol.textContent = estimatedAlcohol + '%';
+                alcohol.textContent = estimatedAlcohol + '%';
+                
+                // Evalueer alcohol
+                if (estimatedAlcohol < 7.5) {
+                    evalAlcohol.textContent = 'Laag voor een Tripel';
+                } else if (estimatedAlcohol > 9.5) {
+                    evalAlcohol.textContent = 'Hoog voor een Tripel';
+                } else {
+                    evalAlcohol.textContent = 'Ideaal voor een Tripel';
+                }
+                
+                // Evalueer mondgevoel op basis van tarwemout en suiker
+                const moutFactor = tarwePercentage * 0.7 - suikerPercentage * 0.3;
+                
+                if (moutFactor < 0) {
+                    resultMondgevoel.textContent = 'Licht';
+                    evalMondgevoel.textContent = 'Te licht voor een Tripel';
+                } else if (moutFactor < 5) {
+                    resultMondgevoel.textContent = 'Medium';
+                    evalMondgevoel.textContent = 'Goed voor een Tripel';
+                } else {
+                    resultMondgevoel.textContent = 'Vol';
+                    evalMondgevoel.textContent = 'Zeer vol voor een Tripel';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om proces bij te werken
+            function updateProcess() {
+                // Update waarde displays
+                tempValue.textContent = tempSlider.value + '°C';
+                bottelsuikerValue.textContent = bottelsuikerSlider.value + ' g/L';
+                phValue.textContent = phSlider.value;
+                
+                // Update beer-specs
+                ph.textContent = phSlider.value;
+                
+                // Evalueer CO2 op basis van bottelsuiker
+                const suikerFactor = parseFloat(bottelsuikerSlider.value);
+                
+                if (suikerFactor < 6) {
+                    resultCO2.textContent = 'Laag';
+                    evalCO2.textContent = 'Onvoldoende voor een Tripel';
+                } else if (suikerFactor < 7.5) {
+                    resultCO2.textContent = 'Medium';
+                    evalCO2.textContent = 'Acceptabel voor een Tripel';
+                } else {
+                    resultCO2.textContent = 'Hoog';
+                    evalCO2.textContent = 'Ideaal voor een Tripel';
+                }
+                
+                // Evalueer schuimkraag op basis van tarwemout, pH en vergistingstemperatuur
+                const tarweFactor = parseFloat(tarweSlider.value);
+                const phFactor = 6.0 - parseFloat(phSlider.value); // Lagere pH is beter voor schuim
+                const tempFactor = 25 - parseFloat(tempSlider.value); // Lagere temp is beter voor schuim
+                
+                const schuimScore = tarweFactor * 0.3 + phFactor * 2 + tempFactor * 0.5;
+                
+                if (schuimScore < 10) {
+                    resultSchuim.textContent = 'Minimaal';
+                    evalSchuim.textContent = 'Onvoldoende voor een Tripel';
+                } else if (schuimScore < 15) {
+                    resultSchuim.textContent = 'Matig';
+                    evalSchuim.textContent = 'Acceptabel voor een Tripel';
+                } else {
+                    resultSchuim.textContent = 'Stevig';
+                    evalSchuim.textContent = 'Ideaal voor een Tripel';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om aanbevelingen bij te werken
+            function updateRecommendations() {
+                let recs = [];
+                
+                // Controleer suikergehalte
+                if (parseInt(suikerSlider.value) < 8) {
+                    recs.push("Verhoog het percentage rietsuiker naar 8-12% voor een typische Tripel");
+                }
+                
+                // Controleer bottelsuiker
+                if (parseFloat(bottelsuikerSlider.value) < 6) {
+                    recs.push("Verhoog de hoeveelheid bottelsuiker naar 7-8 g/L voor betere carbonatie");
+                }
+                
+                // Controleer pH
+                if (parseFloat(phSlider.value) > 5.0) {
+                    recs.push("Verlaag de pH naar 4.0-4.5 voor betere schuimstabiliteit");
+                }
+                
+                // Controleer vergistingstemperatuur
+                if (parseFloat(tempSlider.value) > 20) {
+                    recs.push("Verlaag de vergistingstemperatuur naar 18-20°C voor minder hogere alcoholen");
+                }
+                
+                // Als er geen aanbevelingen zijn
+                if (recs.length === 0) {
+                    recommendations.textContent = "De huidige parameters lijken optimaal voor een goede Tripel met voldoende carbonatie en schuimkraag.";
+                } else {
+                    recommendations.textContent = recs.join(". ") + ".";
+                }
+            }
+            
+            // Initialiseer alles bij het laden
+            updateRecipe();
+            updateProcess();
+        }
+        
+        // Functie om Syntra IPA sliders te initialiseren
+        function initializeIPASliders() {
+            // Recept sliders
+            const paleAleSlider = document.getElementById('pale-ale-slider-ipa');
+            const caraSlider = document.getElementById('cara-slider-ipa');
+            const tarweSlider = document.getElementById('tarwe-slider-ipa');
+            const ibuSlider = document.getElementById('ibu-slider-ipa');
+            
+            // Proces sliders
+            const tempSlider = document.getElementById('temp-slider-ipa');
+            const dryhopSlider = document.getElementById('dryhop-slider-ipa');
+            const phSlider = document.getElementById('ph-slider-ipa');
+            
+            // Waarde displays
+            const paleAleValue = document.getElementById('pale-ale-value-ipa');
+            const caraValue = document.getElementById('cara-value-ipa');
+            const tarweValue = document.getElementById('tarwe-value-ipa');
+            const ibuValue = document.getElementById('ibu-value-ipa');
+            const tempValue = document.getElementById('temp-value-ipa');
+            const dryhopValue = document.getElementById('dryhop-value-ipa');
+            const phValue = document.getElementById('ph-value-ipa');
+            
+            // Resultaat displays
+            const resultAlcohol = document.getElementById('result-alcohol-ipa');
+            const resultHop = document.getElementById('result-hop-ipa');
+            const resultBitter = document.getElementById('result-bitter-ipa');
+            const resultMondgevoel = document.getElementById('result-mondgevoel-ipa');
+            const evalAlcohol = document.getElementById('eval-alcohol-ipa');
+            const evalHop = document.getElementById('eval-hop-ipa');
+            const evalBitter = document.getElementById('eval-bitter-ipa');
+            const evalMondgevoel = document.getElementById('eval-mondgevoel-ipa');
+            const recommendations = document.getElementById('recommendations-ipa');
+            
+            // Elementen in de beer-specs
+            const paleAleMout = document.getElementById('pale-ale-mout-ipa');
+            const caramout = document.getElementById('caramout-ipa');
+            const tarwemout = document.getElementById('tarwemout-ipa');
+            const ibu = document.getElementById('ibu-ipa');
+            const alcohol = document.getElementById('alcohol-ipa');
+            const ph = document.getElementById('ph-ipa');
+            
+            // Event listeners voor recept sliders
+            paleAleSlider.addEventListener('input', updateRecipe);
+            caraSlider.addEventListener('input', updateRecipe);
+            tarweSlider.addEventListener('input', updateRecipe);
+            ibuSlider.addEventListener('input', updateRecipe);
+            
+            // Event listeners voor proces sliders
+            tempSlider.addEventListener('input', updateProcess);
+            dryhopSlider.addEventListener('input', updateProcess);
+            phSlider.addEventListener('input', updateProcess);
+            
+            // Functie om recept bij te werken
+            function updateRecipe() {
+                // Zorg ervoor dat de percentages optellen tot 100%
+                let paleAlePercentage = parseInt(paleAleSlider.value);
+                let caraPercentage = parseInt(caraSlider.value);
+                let tarwePercentage = parseInt(tarweSlider.value);
+                
+                const total = paleAlePercentage + caraPercentage + tarwePercentage;
+                
+                if (total !== 100) {
+                    // Pas pale ale mout aan om tot 100% te komen
+                    paleAlePercentage = 100 - caraPercentage - tarwePercentage;
+                    paleAleSlider.value = paleAlePercentage;
+                }
+                
+                // Update waarde displays
+                paleAleValue.textContent = paleAlePercentage + '%';
+                caraValue.textContent = caraPercentage + '%';
+                tarweValue.textContent = tarwePercentage + '%';
+                ibuValue.textContent = ibuSlider.value;
+                
+                // Update beer-specs
+                paleAleMout.textContent = paleAlePercentage + '%';
+                caramout.textContent = caraPercentage + '%';
+                tarwemout.textContent = tarwePercentage + '%';
+                ibu.textContent = ibuSlider.value;
+                
+                // Bereken alcohol op basis van ingrediënten
+                const totalExtract = paleAlePercentage * 0.8 + 
+                                    caraPercentage * 0.75 + 
+                                    tarwePercentage * 0.8;
+                
+                const estimatedAlcohol = (totalExtract * 0.04).toFixed(1);
+                resultAlcohol.textContent = estimatedAlcohol + '%';
+                alcohol.textContent = estimatedAlcohol + '%';
+                
+                // Evalueer alcohol
+                if (estimatedAlcohol < 5.5) {
+                    evalAlcohol.textContent = 'Laag voor een IPA';
+                } else if (estimatedAlcohol > 7.5) {
+                    evalAlcohol.textContent = 'Hoog voor een IPA';
+                } else {
+                    evalAlcohol.textContent = 'Goed voor een IPA';
+                }
+                
+                // Evalueer bitterheid op basis van IBU
+                const ibuValue = parseInt(ibuSlider.value);
+                
+                if (ibuValue < 40) {
+                    resultBitter.textContent = 'Laag';
+                    evalBitter.textContent = 'Te laag voor een IPA';
+                } else if (ibuValue < 55) {
+                    resultBitter.textContent = 'Medium';
+                    evalBitter.textContent = 'Acceptabel voor een IPA';
+                } else if (ibuValue < 70) {
+                    resultBitter.textContent = 'Hoog';
+                    evalBitter.textContent = 'Goed voor een IPA';
+                } else {
+                    resultBitter.textContent = 'Zeer hoog';
+                    evalBitter.textContent = 'Intens voor een IPA';
+                }
+                
+                // Evalueer mondgevoel op basis van caramout
+                const moutFactor = caraPercentage;
+                
+                if (moutFactor < 5) {
+                    resultMondgevoel.textContent = 'Licht';
+                    evalMondgevoel.textContent = 'Te licht voor een IPA';
+                } else if (moutFactor < 12) {
+                    resultMondgevoel.textContent = 'Medium';
+                    evalMondgevoel.textContent = 'Goed voor een IPA';
+                } else {
+                    resultMondgevoel.textContent = 'Vol';
+                    evalMondgevoel.textContent = 'Zeer vol voor een IPA';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om proces bij te werken
+            function updateProcess() {
+                // Update waarde displays
+                tempValue.textContent = tempSlider.value + '°C';
+                dryhopValue.textContent = dryhopSlider.value + ' dagen';
+                phValue.textContent = phSlider.value;
+                
+                // Update beer-specs
+                ph.textContent = phSlider.value;
+                
+                // Evalueer hopkarakter op basis van dry-hopping
+                const dryhopFactor = parseInt(dryhopSlider.value);
+                
+                if (dryhopFactor < 3) {
+                    resultHop.textContent = 'Subtiel';
+                    evalHop.textContent = 'Te subtiel voor een IPA';
+                } else if (dryhopFactor < 6) {
+                    resultHop.textContent = 'Duidelijk';
+                    evalHop.textContent = 'Goed voor een IPA';
+                } else {
+                    resultHop.textContent = 'Uitgesproken';
+                    evalHop.textContent = 'Ideaal voor een IPA';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om aanbevelingen bij te werken
+            function updateRecommendations() {
+                let recs = [];
+                
+                // Controleer IBU
+                if (parseInt(ibuSlider.value) < 50) {
+                    recs.push("Verhoog de IBU naar 50-70 voor een typische Amerikaanse IPA");
+                }
+                
+                // Controleer dry-hopping
+                if (parseInt(dryhopSlider.value) < 4) {
+                    recs.push("Verleng de dry-hopping periode naar 5-7 dagen voor meer hopkarakter");
+                }
+                
+                // Controleer caramout
+                if (parseInt(caraSlider.value) < 8) {
+                    recs.push("Verhoog het percentage caramout naar 8-12% voor meer balans met de hopbitterheid");
+                } else if (parseInt(caraSlider.value) > 15) {
+                    recs.push("Verlaag het percentage caramout om een te zoet profiel te vermijden");
+                }
+                
+                // Als er geen aanbevelingen zijn
+                if (recs.length === 0) {
+                    recommendations.textContent = "De huidige parameters lijken goed voor een Amerikaanse IPA met uitgesproken hopkarakter.";
+                } else {
+                    recommendations.textContent = recs.join(". ") + ".";
+                }
+            }
+            
+            // Initialiseer alles bij het laden
+            updateRecipe();
+            updateProcess();
+        }
+        
+        // Functie om Syntra Pils sliders te initialiseren
+        function initializePilsSliders() {
+            // Recept sliders
+            const pilsSlider = document.getElementById('pils-slider-pils');
+            const carapilsSlider = document.getElementById('carapils-slider-pils');
+            const ibuSlider = document.getElementById('ibu-slider-pils');
+            
+            // Proces sliders
+            const tempSlider = document.getElementById('temp-slider-pils');
+            const lagerSlider = document.getElementById('lager-slider-pils');
+            const phSlider = document.getElementById('ph-slider-pils');
+            
+            // Waarde displays
+            const pilsValue = document.getElementById('pils-value-pils');
+            const carapilsValue = document.getElementById('carapils-value-pils');
+            const ibuValue = document.getElementById('ibu-value-pils');
+            const tempValue = document.getElementById('temp-value-pils');
+            const lagerValue = document.getElementById('lager-value-pils');
+            const phValue = document.getElementById('ph-value-pils');
+            
+            // Resultaat displays
+            const resultAlcohol = document.getElementById('result-alcohol-pils');
+            const resultHelder = document.getElementById('result-helder-pils');
+            const resultBitter = document.getElementById('result-bitter-pils');
+            const resultAfdronk = document.getElementById('result-afdronk-pils');
+            const evalAlcohol = document.getElementById('eval-alcohol-pils');
+            const evalHelder = document.getElementById('eval-helder-pils');
+            const evalBitter = document.getElementById('eval-bitter-pils');
+            const evalAfdronk = document.getElementById('eval-afdronk-pils');
+            const recommendations = document.getElementById('recommendations-pils');
+            
+            // Elementen in de beer-specs
+            const pilsmout = document.getElementById('pilsmout-pils');
+            const carapils = document.getElementById('carapils-pils');
+            const ibu = document.getElementById('ibu-pils');
+            const alcohol = document.getElementById('alcohol-pils');
+            const ph = document.getElementById('ph-pils');
+            
+            // Event listeners voor recept sliders
+            pilsSlider.addEventListener('input', updateRecipe);
+            carapilsSlider.addEventListener('input', updateRecipe);
+            ibuSlider.addEventListener('input', updateRecipe);
+            
+            // Event listeners voor proces sliders
+            tempSlider.addEventListener('input', updateProcess);
+            lagerSlider.addEventListener('input', updateProcess);
+            phSlider.addEventListener('input', updateProcess);
+            
+            // Functie om recept bij te werken
+            function updateRecipe() {
+                // Zorg ervoor dat de percentages optellen tot 100%
+                let pilsPercentage = parseInt(pilsSlider.value);
+                let carapilsPercentage = parseInt(carapilsSlider.value);
+                
+                const total = pilsPercentage + carapilsPercentage;
+                
+                if (total !== 100) {
+                    // Pas pilsmout aan om tot 100% te komen
+                    pilsPercentage = 100 - carapilsPercentage;
+                    pilsSlider.value = pilsPercentage;
+                }
+                
+                // Update waarde displays
+                pilsValue.textContent = pilsPercentage + '%';
+                carapilsValue.textContent = carapilsPercentage + '%';
+                ibuValue.textContent = ibuSlider.value;
+                
+                // Update beer-specs
+                pilsmout.textContent = pilsPercentage + '%';
+                carapils.textContent = carapilsPercentage + '%';
+                ibu.textContent = ibuSlider.value;
+                
+                // Bereken alcohol op basis van ingrediënten
+                const totalExtract = pilsPercentage * 0.8 + carapilsPercentage * 0.75;
+                
+                const estimatedAlcohol = (totalExtract * 0.03).toFixed(1);
+                resultAlcohol.textContent = estimatedAlcohol + '%';
+                alcohol.textContent = estimatedAlcohol + '%';
+                
+                // Evalueer alcohol
+                if (estimatedAlcohol < 4.5) {
+                    evalAlcohol.textContent = 'Laag voor een Pils';
+                } else if (estimatedAlcohol > 5.5) {
+                    evalAlcohol.textContent = 'Hoog voor een Pils';
+                } else {
+                    evalAlcohol.textContent = 'Ideaal voor een Pils';
+                }
+                
+                // Evalueer bitterheid op basis van IBU
+                const ibuValue = parseInt(ibuSlider.value);
+                
+                if (ibuValue < 25) {
+                    resultBitter.textContent = 'Laag';
+                    evalBitter.textContent = 'Te laag voor een Pils';
+                } else if (ibuValue < 35) {
+                    resultBitter.textContent = 'Medium';
+                    evalBitter.textContent = 'Goed voor een Pils';
+                } else {
+                    resultBitter.textContent = 'Hoog';
+                    evalBitter.textContent = 'Intens voor een Pils';
+                }
+                
+                // Evalueer afdronk op basis van carapils en IBU
+                const afdronkFactor = ibuValue - (carapilsPercentage * 2);
+                
+                if (afdronkFactor < 15) {
+                    resultAfdronk.textContent = 'Zoet';
+                    evalAfdronk.textContent = 'Te zoet voor een Pils';
+                } else if (afdronkFactor < 25) {
+                    resultAfdronk.textContent = 'Gebalanceerd';
+                    evalAfdronk.textContent = 'Acceptabel voor een Pils';
+                } else {
+                    resultAfdronk.textContent = 'Droog';
+                    evalAfdronk.textContent = 'Ideaal voor een Pils';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om proces bij te werken
+            function updateProcess() {
+                // Update waarde displays
+                tempValue.textContent = tempSlider.value + '°C';
+                lagerValue.textContent = lagerSlider.value + ' weken';
+                phValue.textContent = phSlider.value;
+                
+                // Update beer-specs
+                ph.textContent = phSlider.value;
+                
+                // Evalueer helderheid op basis van lagering
+                const lagerFactor = parseInt(lagerSlider.value);
+                
+                if (lagerFactor < 2) {
+                    resultHelder.textContent = 'Troebel';
+                    evalHelder.textContent = 'Onvoldoende voor een Pils';
+                } else if (lagerFactor < 4) {
+                    resultHelder.textContent = 'Helder';
+                    evalHelder.textContent = 'Goed voor een Pils';
+                } else {
+                    resultHelder.textContent = 'Zeer helder';
+                    evalHelder.textContent = 'Ideaal voor een Pils';
+                }
+                
+                updateRecommendations();
+            }
+            
+            // Functie om aanbevelingen bij te werken
+            function updateRecommendations() {
+                let recs = [];
+                
+                // Controleer lagering
+                if (parseInt(lagerSlider.value) < 3) {
+                    recs.push("Verleng de lageringsperiode naar 4-6 weken voor optimale helderheid");
+                }
+                
+                // Controleer vergistingstemperatuur
+                if (parseInt(tempSlider.value) > 12) {
+                    recs.push("Verlaag de vergistingstemperatuur naar 8-10°C voor een schonere smaak");
+                }
+                
+                // Controleer carapils
+                if (parseInt(carapilsSlider.value) > 8) {
+                    recs.push("Verlaag het percentage carapils naar 3-5% voor een drogere afdronk");
+                }
+                
+                // Als er geen aanbevelingen zijn
+                if (recs.length === 0) {
+                    recommendations.textContent = "De huidige parameters lijken optimaal voor een klassieke Pils met goede helderheid en verfrissende smaak.";
+                } else {
+                    recommendations.textContent = recs.join(". ") + ".";
+                }
+            }
+            
+            // Initialiseer alles bij het laden
+            updateRecipe();
+            updateProcess();
+        }
+        
+        // Wacht tot de pagina is geladen
+        document.addEventListener('DOMContentLoaded', initializeSliders);
+    </script>
 
 
 <div data-lastpass-root="" style="position: absolute !important; top: 0px !important; left: 0px !important; height: 0px !important; width: 0px !important;"></div></body></html>
