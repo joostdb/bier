@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>RSS-feed Magazine</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0077cc" />
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f1f1f1; margin: 0; padding: 20px; }
+    h1 { text-align: center; margin-bottom: 20px; }
+    .input-container { text-align: center; margin-bottom: 30px; }
+    input, button {
+      padding: 10px; font-size: 1rem; border-radius: 5px; border: 1px solid #ccc;
+    }
+    button {
+      background-color: #0077cc; color: white; cursor: pointer; margin-left: 10px;
+      transition: background 0.3s ease;
+    }
+    button:hover { background-color: #005fa3; }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+    }
+    .card {
+      background: white; border-radius: 10px; overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      display: flex; flex-direction: column;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    .card img {
+      width: 100%; object-fit: cover; max-height: 180px;
+    }
+    .card-content {
+      padding: 15px; flex: 1; display: flex; flex-direction: column;
+    }
+    .card-title {
+      font-size: 1.1rem; font-weight: bold; margin-bottom: 10px;
+      color: #0077cc; text-decoration: none;
+    }
+    .card-description { font-size: 0.95rem; color: #333; flex-grow: 1; }
+  </style>
+</head>
+<body>
+  <h1>📖 Mijn RSS-magazine</h1>
+  <div class="input-container">
+    <input type="text" id="rss-url" placeholder="Plak een RSS-feed URL hier" size="50" />
+    <button onclick="laadRSS()">Laad Feed</button>
+  </div>
+  <div class="grid" id="feed-output"></div>
+  <script>
+    function decodeBase64(str) {
+      try {
+        return decodeURIComponent(atob(str).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+      } catch (e) {
+        return atob(str);
+      }
+    }
+    async function laadRSS() {
+      const url = document.getElementById("rss-url").value;
+      const output = document.getElementById("feed-output");
+      output.innerHTML = "<p>Bezig met laden...</p>";
+      try {
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&charset=UTF-8`);
+        const data = await response.json();
+        let contents = data.contents;
+        if (contents.startsWith("data:")) {
+          const base64Part = contents.split(",")[1];
+          contents = decodeBase64(base64Part);
+        }
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(contents, "text/xml");
+        const items = xml.querySelectorAll("item");
+        output.innerHTML = "";
+        items.forEach(item => {
+          const title = item.querySelector("title")?.textContent || "Geen titel";
+          const link = item.querySelector("link")?.textContent || "#";
+          const description = item.querySelector("description")?.textContent || "";
+          let imgSrc = "";
+          const media = item.getElementsByTagName("media:content")[0];
+          if (media && media.getAttribute("url")) imgSrc = media.getAttribute("url");
+          if (!imgSrc) {
+            const enclosure = item.querySelector("enclosure[type^='image']");
+            if (enclosure) imgSrc = enclosure.getAttribute("url");
+          }
+          if (!imgSrc) {
+            const imgMatch = description.match(/<img.*?src=["'](.*?)["']/i);
+            if (imgMatch) imgSrc = imgMatch[1];
+          }
+          const tmp = document.createElement("div");
+          tmp.innerHTML = description;
+          const cleanText = tmp.textContent?.trim().slice(0, 200) + "..." || "";
+          const card = document.createElement("div");
+          card.className = "card";
+          card.innerHTML = \`
+            \${imgSrc ? \`<img src="\${imgSrc}" alt="Afbeelding">\` : ""}
+            <div class="card-content">
+              <a class="card-title" href="\${link}" target="_blank">\${title}</a>
+              <div class="card-description">\${cleanText}</div>
+            </div>\`;
+          output.appendChild(card);
+        });
+        if (items.length === 0) {
+          output.innerHTML = "<p>Geen items gevonden in de feed.</p>";
+        }
+      } catch (error) {
+        output.innerHTML = \`<p>Fout bij het laden van de feed: \${error}</p>\`;
+      }
+    }
+  </script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(reg => console.log("✅ Service Worker geregistreerd"))
+        .catch(err => console.error("❌ Service Worker fout:", err));
+    }
+  </script>
+</body>
+</html>
