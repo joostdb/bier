@@ -150,12 +150,52 @@
       reader.readAsText(file);
     }
 
-    // Voorgeladen feeds bij herstart
+    // Feeds opnieuw tonen bij herladen
     window.addEventListener("DOMContentLoaded", () => {
       const opgeslagen = haalOpgeslagenFeeds();
       if (opgeslagen.length) {
         document.getElementById("rss-url").value = opgeslagen.join("\n");
         laadRSS();
+      }
+
+      // PWA only if NOT file://
+      if (location.protocol !== 'file:') {
+        const manifest = {
+          "name": "Mijn RSS Lezer",
+          "short_name": "RSSLezer",
+          "start_url": ".",
+          "display": "standalone",
+          "background_color": "#ffffff",
+          "theme_color": "#0077cc",
+          "icons": [{
+            "src": "https://cdn-icons-png.flaticon.com/512/3416/3416079.png",
+            "sizes": "192x192",
+            "type": "image/png"
+          }]
+        };
+        const blob = new Blob([JSON.stringify(manifest)], { type: "application/json" });
+        const manifestURL = URL.createObjectURL(blob);
+        const link = document.createElement("link");
+        link.rel = "manifest";
+        link.href = manifestURL;
+        document.head.appendChild(link);
+
+        if ('serviceWorker' in navigator) {
+          const swBlob = new Blob([`
+            self.addEventListener('install', e => {
+              e.waitUntil(caches.open('rss-cache').then(cache => cache.addAll(['.'])));
+            });
+            self.addEventListener('fetch', e => {
+              e.respondWith(
+                caches.match(e.request).then(r => r || fetch(e.request))
+              );
+            });
+          `], { type: 'application/javascript' });
+          const swUrl = URL.createObjectURL(swBlob);
+          navigator.serviceWorker.register(swUrl).then(() => {
+            console.log("✅ Service worker actief.");
+          }).catch(err => console.warn("Service worker fout:", err));
+        }
       }
     });
   </script>
