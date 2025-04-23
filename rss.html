@@ -8,7 +8,7 @@
   <style>
     body { font-family: Arial, sans-serif; background: #f1f1f1; margin: 0; padding: 20px; }
     h1 { text-align: center; }
-    textarea { width: 80%; height: 80px; padding: 10px; }
+    input[type="text"] { width: 70%; padding: 10px; }
     button { padding: 10px 15px; margin: 5px; cursor: pointer; }
     .grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
@@ -22,13 +22,17 @@
     .card-content { padding: 15px; display: flex; flex-direction: column; }
     .card-title { font-weight: bold; margin-bottom: 10px; color: #0077cc; }
     .card-description { flex: 1; font-size: 0.95rem; }
+    .feed-entry { margin: 5px 0; display: flex; align-items: center; gap: 10px; }
+    .feed-entry span { flex: 1; word-break: break-all; }
   </style>
 </head>
 <body>
   <h1>📖 Mijn RSS Lezer</h1>
   <div style="text-align: center; margin-bottom: 15px;">
-    <textarea id="rss-url" placeholder="Voer feed URL's in, één per regel"></textarea><br>
-    <button onclick="laadRSS()">📰 Laad Feeds</button>
+    <input type="text" id="nieuwe-url" placeholder="Voeg RSS-feed URL toe">
+    <button onclick="voegFeedToe()">➕ Voeg toe</button>
+    <div id="feed-list"></div>
+    <button onclick="laadRSS()">📰 Laad Actieve Feeds</button>
     <button onclick="exporteerFeeds()">💾 Exporteer Feeds</button>
     <button onclick="document.getElementById('import-bestand').click()">📂 Importeer</button>
     <input type="file" id="import-bestand" style="display:none" accept=".json" onchange="importeerFeeds(event)">
@@ -37,6 +41,15 @@
 
   <script>
     let alleItems = [];
+
+    // Scroll-check & refresh
+    (function () {
+      let lastScrollTime = Date.now();
+      window.addEventListener('scroll', () => lastScrollTime = Date.now());
+      setInterval(() => {
+        if ((Date.now() - lastScrollTime) > 30000) location.reload();
+      }, 5000);
+    })();
 
     function decodeBase64(str) {
       try {
@@ -47,50 +60,75 @@
       }
     }
 
-    function slaFeedsOp(urls) {
-      localStorage.setItem("mijnRSSFeeds", JSON.stringify(urls));
+    function getFeeds() {
+      return JSON.parse(localStorage.getItem("mijnRSSFeeds") || "[]");
     }
 
-    function haalOpgeslagenFeeds() {
-      const data = localStorage.getItem("mijnRSSFeeds");
-      return data ? JSON.parse(data) : [];
+    function saveFeeds(feeds) {
+      localStorage.setItem("mijnRSSFeeds", JSON.stringify(feeds));
     }
 
-    function toonFeeds(feeds) {
-      const output = document.getElementById("feed-output");
-      output.innerHTML = "";
-      feeds.forEach(({ title, link, description, pubDate, imgSrc }) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          ${imgSrc ? `<img src="${imgSrc}" alt="">` : ""}
-          <div class="card-content">
-            <a class="card-title" href="${link}" target="_blank">${title}</a>
-            <div class="card-description">${description}</div>
-          </div>`;
-        output.appendChild(card);
+    function voegFeedToe() {
+      const urlInput = document.getElementById("nieuwe-url");
+      const url = urlInput.value.trim();
+      if (!url) return;
+      const feeds = getFeeds();
+      if (feeds.find(f => f.url === url)) return alert("Deze feed is al toegevoegd.");
+      feeds.push({ url, active: true });
+      saveFeeds(feeds);
+      urlInput.value = "";
+      toonFeedLijst();
+    }
+
+    function toggleFeedStatus(index) {
+      const feeds = getFeeds();
+      feeds[index].active = !feeds[index].active;
+      saveFeeds(feeds);
+      toonFeedLijst();
+    }
+
+    function verwijderFeed(index) {
+      const feeds = getFeeds();
+      feeds.splice(index, 1);
+      saveFeeds(feeds);
+      toonFeedLijst();
+    }
+
+    function toonFeedLijst() {
+      const feeds = getFeeds();
+      const lijst = document.getElementById("feed-list");
+      lijst.innerHTML = "";
+      feeds.forEach((feed, i) => {
+        const el = document.createElement("div");
+        el.className = "feed-entry";
+        el.innerHTML = `
+          <input type="checkbox" ${feed.active ? "checked" : ""} onchange="toggleFeedStatus(${i})">
+          <span>${feed.url}</span>
+          <button onclick="verwijderFeed(${i})">🗑</button>
+        `;
+        lijst.appendChild(el);
       });
     }
 
     async function laadRSS() {
-      const textarea = document.getElementById("rss-url");
-      const urls = textarea.value.split(/[\n,]+/).map(u => u.trim()).filter(u => u);
-      if (!urls.length) return alert("Geen geldige URL's opgegeven.");
-      slaFeedsOp(urls);
+      const feeds = getFeeds().filter(f => f.active);
+      if (!feeds.length) return alert("Geen actieve feeds.");
       alleItems = [];
       document.getElementById("feed-output").innerHTML = "<p>Feeds laden...</p>";
-      for (let url of urls) {
-        await laadEnParseerFeed(url);
+
+      for (let feed of feeds) {
+        await laadEnParseerFeed(feed.url);
+        alleItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        toonFeeds(alleItems);
       }
-      alleItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-      toonFeeds(alleItems);
     }
 
     async function laadEnParseerFeed(url) {
       try {
         const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&charset=UTF-8`);
         const data = await response.json();
-        let contents = data.contents;
+        let contents = data?.contents;
+        if (!contents) return;
         if (contents.startsWith("data:")) {
           const base64Part = contents.split(",")[1];
           contents = decodeBase64(base64Part);
@@ -98,7 +136,9 @@
         const parser = new DOMParser();
         const xml = parser.parseFromString(contents, "text/xml");
         const items = xml.querySelectorAll("item");
-        items.forEach(item => {
+
+        for (let i = 0; i < Math.min(items.length, 10); i++) {
+          const item = items[i];
           const title = item.querySelector("title")?.textContent || "Geen titel";
           const link = item.querySelector("link")?.textContent || "#";
           const description = item.querySelector("description")?.textContent || "";
@@ -118,16 +158,32 @@
           tmp.innerHTML = description;
           const cleanText = tmp.textContent?.trim().slice(0, 200) + "..." || "";
           alleItems.push({ title, link, description: cleanText, pubDate, imgSrc });
-        });
+        }
       } catch (e) {
         console.error("Fout bij laden van feed:", url, e);
       }
     }
 
+    function toonFeeds(feeds) {
+      const output = document.getElementById("feed-output");
+      output.innerHTML = "";
+      feeds.forEach(({ title, link, description, pubDate, imgSrc }) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          ${imgSrc ? `<img src="${imgSrc}" alt="">` : ""}
+          <div class="card-content">
+            <a class="card-title" href="${link}" target="_blank">${title}</a>
+            <div class="card-description">${description}</div>
+          </div>`;
+        output.appendChild(card);
+      });
+    }
+
     function exporteerFeeds() {
-      const urls = document.getElementById("rss-url").value.split(/[\n,]+/).map(u => u.trim()).filter(u => u);
-      if (!urls.length) return alert("Geen feeds om op te slaan.");
-      const blob = new Blob([JSON.stringify(urls, null, 2)], { type: "application/json" });
+      const feeds = getFeeds();
+      if (!feeds.length) return alert("Geen feeds om op te slaan.");
+      const blob = new Blob([JSON.stringify(feeds, null, 2)], { type: "application/json" });
       const a = document.createElement("a");
       a.href = URL.createObjectURL(blob);
       a.download = "mijn-feeds.json";
@@ -140,25 +196,20 @@
       const reader = new FileReader();
       reader.onload = e => {
         try {
-          const urls = JSON.parse(e.target.result);
-          document.getElementById("rss-url").value = urls.join("\n");
-          slaFeedsOp(urls);
-        } catch (err) {
+          const feeds = JSON.parse(e.target.result);
+          saveFeeds(feeds);
+          toonFeedLijst();
+        } catch {
           alert("Kon JSON niet laden.");
         }
       };
       reader.readAsText(file);
     }
 
-    // Feeds opnieuw tonen bij herladen
     window.addEventListener("DOMContentLoaded", () => {
-      const opgeslagen = haalOpgeslagenFeeds();
-      if (opgeslagen.length) {
-        document.getElementById("rss-url").value = opgeslagen.join("\n");
-        laadRSS();
-      }
+      toonFeedLijst();
+      laadRSS();
 
-      // PWA only if NOT file://
       if (location.protocol !== 'file:') {
         const manifest = {
           "name": "Mijn RSS Lezer",
