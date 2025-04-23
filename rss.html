@@ -2,13 +2,15 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8" />
-  <title>Mijn RSS-lezer</title>
+  <title>ID/ RSS</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#0077cc" />
   <style>
     body { font-family: Arial, sans-serif; background: #f1f1f1; margin: 0; padding: 20px; }
     h1 { text-align: center; }
-    input[type="text"] { width: 70%; padding: 10px; }
+    input[type="text"] { width: 70%; padding: 10px; text-align:center
+	
+	}
     button { padding: 10px 15px; margin: 5px; cursor: pointer; }
     .grid {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
@@ -18,6 +20,7 @@
       background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       overflow: hidden; display: flex; flex-direction: column;
     }
+	#feed-list { margin-left: auto; margin-right: auto; width: 80%; text-align:left; }
     .card img { width: 100%; max-height: 180px; object-fit: cover; }
     .card-content { padding: 15px; display: flex; flex-direction: column; }
     .card-title { font-weight: bold; margin-bottom: 10px; color: #0077cc; }
@@ -27,11 +30,23 @@
   </style>
 </head>
 <body>
-  <h1>📖 Mijn RSS Lezer</h1>
+  <h1>ID/ RSS</h1>
   <div style="text-align: center; margin-bottom: 15px;">
     <input type="text" id="nieuwe-url" placeholder="Voeg RSS-feed URL toe">
     <button onclick="voegFeedToe()">➕ Voeg toe</button>
+	<label for="max-items">Maximale totaalitems:</label>
+<select id="max-items" onchange="laadRSS()">
+  <option value="∞" selected>∞ Oneindig</option>
+  <option value="10">10</option>
+  <option value="20">20</option>
+  <option value="30">30</option>
+  <option value="50">50</option>
+  <option value="100">100</option>
+</select>
+
     <div id="feed-list"></div>
+	<button onclick="herlaadFeeds()">🔄 Herlaad</button>
+
     <button onclick="laadRSS()">📰 Laad Actieve Feeds</button>
     <button onclick="exporteerFeeds()">💾 Exporteer Feeds</button>
     <button onclick="document.getElementById('import-bestand').click()">📂 Importeer</button>
@@ -41,6 +56,18 @@
 
   <script>
     let alleItems = [];
+let getoondeIndex = 0;
+const itemsPerScroll = 20;
+
+window.addEventListener("scroll", () => {
+  const d = document.documentElement;
+  if (d.scrollTop + d.clientHeight >= d.scrollHeight - 100) {
+    if (getoondeIndex < alleItems.length) {
+      toonFeeds(alleItems, true); // Laad volgende batch
+    }
+  }
+});
+
 
     // Scroll-check & refresh
     (function () {
@@ -109,21 +136,53 @@
         lijst.appendChild(el);
       });
     }
+	
+	function refreshFeeds() {
+  // 🧹 Wis lokaal opgeslagen feeds en items
+  localStorage.removeItem("mijnRSSFeeds");
+  alleItems = [];
+  getoondeIndex = 0;
 
-    async function laadRSS() {
-      const feeds = getFeeds().filter(f => f.active);
-      if (!feeds.length) return alert("Geen actieve feeds.");
-      alleItems = [];
-      document.getElementById("feed-output").innerHTML = "<p>Feeds laden...</p>";
+  // Wis interface en tekstvelden
+  document.getElementById("feed-output").innerHTML = "<p>Geheugen gewist. Herladen...</p>";
+  document.getElementById("rss-url").value = "";
+  document.getElementById("feed-list").innerHTML = "";
 
-      for (let feed of feeds) {
-        await laadEnParseerFeed(feed.url);
-        alleItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-        toonFeeds(alleItems);
-      }
-    }
+  // Eventueel ook de feedlijst leeg maken in UI
+  toonFeedLijst(); // om checkboxes en knoppen te wissen
 
-    async function laadEnParseerFeed(url) {
+  // Alles herladen vanaf nul
+  setTimeout(() => {
+    location.reload(); // of start vanuit nul zonder pagina reload
+  }, 500);
+}
+
+
+async function laadRSS() {
+  const feeds = getFeeds().filter(f => f.active);
+  if (!feeds.length) return alert("Geen actieve feeds.");
+  alleItems = [];
+  getoondeIndex = 0; // ✅ reset teller
+
+const maxItemsValue = document.getElementById("max-items").value;
+const maxTotalItems = maxItemsValue === "∞" ? Infinity : parseInt(maxItemsValue);
+const itemsPerFeed = Math.max(1, Math.floor(maxTotalItems / feeds.length));
+
+
+  document.getElementById("feed-output").innerHTML = "<p>Feeds laden...</p>";
+
+  for (let feed of feeds) {
+    await laadEnParseerFeed(feed.url, itemsPerFeed);
+  }
+
+  alleItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  toonFeeds(alleItems); // Laad eerste batch
+}
+
+
+
+async function laadEnParseerFeed(url, itemsPerFeed = 20) {
+
       try {
         const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&charset=UTF-8`);
         const data = await response.json();
@@ -137,7 +196,8 @@
         const xml = parser.parseFromString(contents, "text/xml");
         const items = xml.querySelectorAll("item");
 
-        for (let i = 0; i < Math.min(items.length, 10); i++) {
+for (let i = 0; i < Math.min(items.length, itemsPerFeed); i++) {
+
           const item = items[i];
           const title = item.querySelector("title")?.textContent || "Geen titel";
           const link = item.querySelector("link")?.textContent || "#";
@@ -164,21 +224,51 @@
       }
     }
 
-    function toonFeeds(feeds) {
-      const output = document.getElementById("feed-output");
-      output.innerHTML = "";
-      feeds.forEach(({ title, link, description, pubDate, imgSrc }) => {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = `
-          ${imgSrc ? `<img src="${imgSrc}" alt="">` : ""}
-          <div class="card-content">
-            <a class="card-title" href="${link}" target="_blank">${title}</a>
-            <div class="card-description">${description}</div>
-          </div>`;
-        output.appendChild(card);
-      });
-    }
+function toonFeeds(feeds, append = false) {
+  const output = document.getElementById("feed-output");
+  if (!append) output.innerHTML = ""; // Leegmaken bij eerste keer
+
+  const batch = feeds.slice(getoondeIndex, getoondeIndex + itemsPerScroll);
+  batch.forEach(({ title, link, description, pubDate, imgSrc }) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.innerHTML = `
+      ${imgSrc ? `<img src="${imgSrc}" alt="">` : ""}
+      <div class="card-content">
+        <a class="card-title" href="${link}" target="_blank">${title}</a>
+        <div class="card-description">${description}</div>
+      </div>`;
+    output.appendChild(card);
+  });
+
+  getoondeIndex += itemsPerScroll;
+
+  // Als dit de laatste batch was, toon einde-kaart
+  if (getoondeIndex >= feeds.length) {
+    const endCard = document.createElement("div");
+    endCard.className = "card";
+    endCard.innerHTML = `
+      <div class="card-content" style="text-align:center; color: #888;">
+        <strong>📍 Einde van de resultaten</strong>
+      </div>`;
+    output.appendChild(endCard);
+  }
+}
+
+function herlaadFeeds() {
+  getoondeIndex = 0;
+  alleItems = [];
+  document.getElementById("feed-output").innerHTML = "<p>Opnieuw laden...</p>";
+  laadRSS();
+}
+
+document.addEventListener("keydown", (e) => {
+  if ((e.ctrlKey || e.shiftKey) && e.key.toLowerCase() === "r") {
+    e.preventDefault();
+    herlaadFeeds();
+  }
+});
+
 
     function exporteerFeeds() {
       const feeds = getFeeds();
