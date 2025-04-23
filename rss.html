@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mijn RSS-lezer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0077cc" />
+  <style>
+    body { font-family: Arial, sans-serif; background: #f1f1f1; margin: 0; padding: 20px; }
+    h1 { text-align: center; }
+    textarea { width: 80%; height: 80px; padding: 10px; }
+    button { padding: 10px 15px; margin: 5px; cursor: pointer; }
+    .grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;
+      margin-top: 30px;
+    }
+    .card {
+      background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      overflow: hidden; display: flex; flex-direction: column;
+    }
+    .card img { width: 100%; max-height: 180px; object-fit: cover; }
+    .card-content { padding: 15px; display: flex; flex-direction: column; }
+    .card-title { font-weight: bold; margin-bottom: 10px; color: #0077cc; }
+    .card-description { flex: 1; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <h1>📖 Mijn RSS Lezer</h1>
+  <div style="text-align: center; margin-bottom: 15px;">
+    <textarea id="rss-url" placeholder="Voer feed URL's in, één per regel"></textarea><br>
+    <button onclick="laadRSS()">📰 Laad Feeds</button>
+    <button onclick="exporteerFeeds()">💾 Exporteer Feeds</button>
+    <button onclick="document.getElementById('import-bestand').click()">📂 Importeer</button>
+    <input type="file" id="import-bestand" style="display:none" accept=".json" onchange="importeerFeeds(event)">
+  </div>
+  <div id="feed-output" class="grid"></div>
+
+  <script>
+    let alleItems = [];
+
+    function decodeBase64(str) {
+      try {
+        return decodeURIComponent(atob(str).split('').map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+      } catch (e) {
+        return atob(str);
+      }
+    }
+
+    function slaFeedsOp(urls) {
+      localStorage.setItem("mijnRSSFeeds", JSON.stringify(urls));
+    }
+
+    function haalOpgeslagenFeeds() {
+      const data = localStorage.getItem("mijnRSSFeeds");
+      return data ? JSON.parse(data) : [];
+    }
+
+    function toonFeeds(feeds) {
+      const output = document.getElementById("feed-output");
+      output.innerHTML = "";
+      feeds.forEach(({ title, link, description, pubDate, imgSrc }) => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = `
+          ${imgSrc ? `<img src="${imgSrc}" alt="">` : ""}
+          <div class="card-content">
+            <a class="card-title" href="${link}" target="_blank">${title}</a>
+            <div class="card-description">${description}</div>
+          </div>`;
+        output.appendChild(card);
+      });
+    }
+
+    async function laadRSS() {
+      const textarea = document.getElementById("rss-url");
+      const urls = textarea.value.split(/[\n,]+/).map(u => u.trim()).filter(u => u);
+      if (!urls.length) return alert("Geen geldige URL's opgegeven.");
+      slaFeedsOp(urls);
+      alleItems = [];
+      document.getElementById("feed-output").innerHTML = "<p>Feeds laden...</p>";
+      for (let url of urls) {
+        await laadEnParseerFeed(url);
+      }
+      alleItems.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+      toonFeeds(alleItems);
+    }
+
+    async function laadEnParseerFeed(url) {
+      try {
+        const response = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(url)}&charset=UTF-8`);
+        const data = await response.json();
+        let contents = data.contents;
+        if (contents.startsWith("data:")) {
+          const base64Part = contents.split(",")[1];
+          contents = decodeBase64(base64Part);
+        }
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(contents, "text/xml");
+        const items = xml.querySelectorAll("item");
+        items.forEach(item => {
+          const title = item.querySelector("title")?.textContent || "Geen titel";
+          const link = item.querySelector("link")?.textContent || "#";
+          const description = item.querySelector("description")?.textContent || "";
+          const pubDate = item.querySelector("pubDate")?.textContent || "";
+          let imgSrc = "";
+          const media = item.getElementsByTagName("media:content")[0];
+          if (media && media.getAttribute("url")) imgSrc = media.getAttribute("url");
+          if (!imgSrc) {
+            const enclosure = item.querySelector("enclosure[type^='image']");
+            if (enclosure) imgSrc = enclosure.getAttribute("url");
+          }
+          if (!imgSrc) {
+            const imgMatch = description.match(/<img.*?src=["'](.*?)["']/i);
+            if (imgMatch) imgSrc = imgMatch[1];
+          }
+          const tmp = document.createElement("div");
+          tmp.innerHTML = description;
+          const cleanText = tmp.textContent?.trim().slice(0, 200) + "..." || "";
+          alleItems.push({ title, link, description: cleanText, pubDate, imgSrc });
+        });
+      } catch (e) {
+        console.error("Fout bij laden van feed:", url, e);
+      }
+    }
+
+    function exporteerFeeds() {
+      const urls = document.getElementById("rss-url").value.split(/[\n,]+/).map(u => u.trim()).filter(u => u);
+      if (!urls.length) return alert("Geen feeds om op te slaan.");
+      const blob = new Blob([JSON.stringify(urls, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "mijn-feeds.json";
+      a.click();
+    }
+
+    function importeerFeeds(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const urls = JSON.parse(e.target.result);
+          document.getElementById("rss-url").value = urls.join("\n");
+          slaFeedsOp(urls);
+        } catch (err) {
+          alert("Kon JSON niet laden.");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Voorgeladen feeds bij herstart
+    window.addEventListener("DOMContentLoaded", () => {
+      const opgeslagen = haalOpgeslagenFeeds();
+      if (opgeslagen.length) {
+        document.getElementById("rss-url").value = opgeslagen.join("\n");
+        laadRSS();
+      }
+    });
+  </script>
+</body>
+</html>
