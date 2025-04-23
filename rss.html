@@ -32,32 +32,44 @@
 <body>
   <h1>ID/ RSS</h1>
   <div style="text-align: center; margin-bottom: 15px;">
-    <input type="text" id="nieuwe-url" placeholder="Voeg RSS-feed URL toe">
-    <button onclick="voegFeedToe()">➕ Voeg toe</button>
-	<label for="max-items">Maximale totaalitems:</label>
-<select id="max-items" onchange="laadRSS()">
-  <option value="∞" selected>∞ Oneindig</option>
-  <option value="10">10</option>
-  <option value="20">20</option>
-  <option value="30">30</option>
-  <option value="50">50</option>
-  <option value="100">100</option>
-</select>
+  <button onclick="toggleInstellingen()">⚙️ Instellingen tonen/verbergen</button>
+</div>
 
-    <div id="feed-list"></div>
-	<button onclick="herlaadFeeds()">🔄 Herlaad</button>
+<div id="instellingen-paneel" style="text-align: center; margin-bottom: 15px; display: none;">
+  <input type="text" id="nieuwe-url" placeholder="Voeg RSS-feed URL toe">
+  <button onclick="voegFeedToe()">➕ Voeg toe</button>
 
-    <button onclick="laadRSS()">📰 Laad Actieve Feeds</button>
-    <button onclick="exporteerFeeds()">💾 Exporteer Feeds</button>
-    <button onclick="document.getElementById('import-bestand').click()">📂 Importeer</button>
-    <input type="file" id="import-bestand" style="display:none" accept=".json" onchange="importeerFeeds(event)">
-  </div>
+  <label for="max-items">Maximale totaalitems:</label>
+  <select id="max-items" onchange="laadRSS()">
+    <option value="∞" selected>∞ Oneindig</option>
+    <option value="10">10</option>
+    <option value="20">20</option>
+    <option value="30">30</option>
+    <option value="50">50</option>
+    <option value="100">100</option>
+  </select>
+
+  <div id="feed-list"></div>
+
+  <button onclick="herlaadFeeds()">🔄 Herlaad</button>
+  <button onclick="laadRSS()">📰 Laad Actieve Feeds</button>
+  <button onclick="exporteerFeeds()">💾 Exporteer Feeds</button>
+  <button onclick="document.getElementById('import-bestand').click()">📂 Importeer</button>
+  <input type="file" id="import-bestand" style="display:none" accept=".json" onchange="importeerFeeds(event)">
+</div>
+
+
   <div id="feed-output" class="grid"></div>
 
   <script>
     let alleItems = [];
 let getoondeIndex = 0;
 const itemsPerScroll = 20;
+
+  function toggleInstellingen() {
+    const paneel = document.getElementById("instellingen-paneel");
+    paneel.style.display = paneel.style.display === "none" ? "block" : "none";
+  }
 
 window.addEventListener("scroll", () => {
   const d = document.documentElement;
