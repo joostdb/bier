@@ -382,22 +382,25 @@ function toonFeeds(append = false) {
         link.href = manifestURL;
         document.head.appendChild(link);
 
-        if ('serviceWorker' in navigator) {
-          const swBlob = new Blob([`
-            self.addEventListener('install', e => {
-              e.waitUntil(caches.open('rss-cache').then(cache => cache.addAll(['.'])));
-            });
-            self.addEventListener('fetch', e => {
-              e.respondWith(
-                caches.match(e.request).then(r => r || fetch(e.request))
-              );
-            });
-          `], { type: 'application/javascript' });
-          const swUrl = URL.createObjectURL(swBlob);
-          navigator.serviceWorker.register(swUrl).then(() => {
-            console.log("✅ Service worker actief.");
-          }).catch(err => console.warn("Service worker fout:", err));
-        }
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open('rss-cache').then(cache => cache.addAll(['.'])));
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        caches.match(e.request).then(r => r || fetch(e.request))
+      );
+    });
+  `;
+  
+  const swUrl = 'data:application/javascript;charset=utf-8,' + encodeURIComponent(swCode);
+
+  navigator.serviceWorker.register(swUrl)
+    .then(() => console.log("✅ Service worker actief via data-URL"))
+    .catch(err => console.warn("Service worker fout:", err));
+}
+
       }
     });
   </script>
