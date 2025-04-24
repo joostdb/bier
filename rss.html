@@ -86,7 +86,7 @@ window.addEventListener("scroll", () => {
       let lastScrollTime = Date.now();
       window.addEventListener('scroll', () => lastScrollTime = Date.now());
       setInterval(() => {
-        if ((Date.now() - lastScrollTime) > 30000) location.reload();
+        if ((Date.now() - lastScrollTime) > 60000) location.reload();
       }, 5000);
     })();
 
