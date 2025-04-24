@@ -244,7 +244,7 @@ async function laadEnParseerFeed(url) {
       const tmp = document.createElement("div");
       tmp.innerHTML = description;
       const cleanText = tmp.textContent?.trim().slice(0, 200) + "..." || "";
-      alleItems.push({ title, link, description: cleanText, pubDate, imgSrc });
+	  alleItems.push({ title, link, description: cleanText, pubDate, imgSrc, bron: url });
     }
   } catch (e) {
     console.error("Fout bij laden van feed:", url, e);
@@ -301,7 +301,7 @@ if (loadingMsg) loadingMsg.remove();
   if (!append) output.innerHTML = "";
 
   const batch = alleItems.slice(getoondeIndex, getoondeIndex + itemsPerScroll);
-  batch.forEach(({ title, link, description, pubDate, imgSrc }) => {
+batch.forEach(({ title, link, description, pubDate, imgSrc, bron }) => {
     const card = document.createElement("div");
     card.className = "card";
     card.innerHTML = `
@@ -309,6 +309,10 @@ if (loadingMsg) loadingMsg.remove();
       <div class="card-content">
         <a class="card-title" href="${link}" target="_blank">${title}</a>
         <div class="card-description">${description}</div>
+		    <div class="card-meta" style="color: #666; font-size: 0.85em; margin-top: 8px;">
+      🕒 ${new Date(pubDate).toLocaleString()}<br>
+      🔗 <a href="${bron}" target="_blank" style="color: inherit;">${bron}</a>
+    </div>
       </div>`;
     output.appendChild(card);
   });
