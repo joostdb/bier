@@ -81,6 +81,44 @@ window.addEventListener("scroll", () => {
 });
 
 
+(function () {
+  let lastScrollTime = Date.now();
+  
+  window.addEventListener('scroll', () => {
+    lastScrollTime = Date.now();
+  });
+
+let bezigMetRefresh = false;
+
+setInterval(() => {
+  const nu = Date.now();
+  const tijdSindsScroll = nu - lastScrollTime;
+
+  if (tijdSindsScroll > 120000 && !bezigMetRefresh) {
+    bezigMetRefresh = true;
+    console.log("⌛ Geen scrollactiviteit gedetecteerd, feeds verversen...");
+
+    alleItems = [];
+    getoondeIndex = 0;
+    document.getElementById("feed-output").innerHTML = "<p>Automatisch verversen...</p>";
+
+    laadRSS()
+      .catch(err => console.error("Fout bij herladen van feeds:", err))
+      .finally(() => {
+        lastScrollTime = Date.now();
+        bezigMetRefresh = false;
+      });
+  }
+}, 5000);
+
+})();
+
+const melding = document.createElement("div");
+melding.textContent = "🔄 Feeds automatisch herladen wegens inactiviteit.";
+melding.style = "position:fixed;bottom:10px;left:50%;transform:translateX(-50%);background:#0077cc;color:#fff;padding:8px 16px;border-radius:4px;z-index:1000;";
+document.body.appendChild(melding);
+setTimeout(() => melding.remove(), 3000);
+
 
     function decodeBase64(str) {
       try {
