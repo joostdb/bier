@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>PDF Flipbook met Turn.js</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,10 +17,11 @@
 
         #flipbook-container {
             width: 90vw;
-            max-width: 900px;
-            aspect-ratio: 4 / 3; /* Behoud verhouding 4:3 */
+            max-width: 100%;
+            min-height: 40vh;
             position: relative;
             margin: 20px auto;
+            overflow: hidden;
         }
 
         #flipbook {
@@ -37,40 +38,40 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            position: relative;
         }
 
         #flipbook .page img {
             max-width: 100%;
             max-height: 100%;
             display: block;
+            object-fit: contain;
         }
 
-        #loading {
+        /* Zoom knoppen styling */
+        .zoom-controls {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.8);
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
             display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 999;
+            gap: 10px;
         }
 
-        #loading span {
-            font-size: 1.2em;
-            color: #333;
+        .zoom-btn {
+            padding: 8px 12px;
+            background: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
         }
 
         @media (max-width: 768px) {
             #flipbook-container {
-                max-width: 100%;
-                margin: 10px 0;
-            }
-
-            #loading span {
-                font-size: 1em;
+                width: 100%;
+                margin: 0;
+                aspect-ratio: auto;
             }
         }
     </style>
@@ -84,6 +85,11 @@
     <div id="loading"><span>PDF wordt geladen... 0%</span></div>
     <div id="flipbook-container">
         <div id="flipbook"></div>
+        <!-- Zoom knoppen -->
+        <div class="zoom-controls">
+            <button class="zoom-btn" onclick="zoomOut()">-</button>
+            <button class="zoom-btn" onclick="zoomIn()">+</button>
+        </div>
     </div>
 
     <script>
@@ -102,7 +108,10 @@
 
             function getFlipbookSize() {
                 const containerWidth = flipbookContainer.width();
-                const containerHeight = flipbookContainer.height();
+                const containerHeight = Math.min(
+                    flipbookContainer.height(),
+                    window.innerHeight * 0.8
+                );
                 return {
                     width: containerWidth,
                     height: containerHeight
@@ -118,19 +127,26 @@
                     width: getFlipbookSize().width,
                     height: getFlipbookSize().height,
                     autoCenter: true,
-                    acceleration: true
+                    acceleration: true,
+                    elevation: 50,
+                    gradients: true,
+                    zoom: 1.1,
+                    maxZoom: 2,
+                    when: {
+                        zoomed: function(event, page, view, scale) {
+                            console.log('Zoomfactor:', scale);
+                        }
+                    }
                 });
             }
 
             function renderPage(pageNum) {
                 pdfDoc.getPage(pageNum).then(function (page) {
                     const containerSize = getFlipbookSize();
-                    const scale = Math.min(
-                        containerSize.width / page.getViewport({ scale: 1 }).width,
-                        containerSize.height / page.getViewport({ scale: 1 }).height
-                    ) * 1.5;
-
-                    const viewport = page.getViewport({ scale: scale });
+                    const viewport = page.getViewport({ 
+                        scale: 1.5
+                    });
+                    
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
@@ -157,6 +173,9 @@
 
                             initFlipbook();
                             loadingIndicator.fadeOut();
+                            
+                            // Voeg zoom event listeners toe
+                            addZoomListeners();
                         }
                     }).catch(function (error) {
                         console.error(`Fout bij renderen van pagina ${pageNum}:`, error);
@@ -168,6 +187,36 @@
                 });
             }
 
+            function addZoomListeners() {
+                // Touch gesture support
+                let lastTouch = 0;
+                flipbook.on('touchstart', function (e) {
+                    if (e.originalEvent.touches.length > 1) {
+                        lastTouch = e.originalEvent.touches.length;
+                    }
+                });
+
+                flipbook.on('touchmove', function (e) {
+                    if (e.originalEvent.touches.length > 1 && e.originalEvent.touches.length !== lastTouch) {
+                        const currentScale = flipbook.turn('zoom');
+                        const newScale = e.originalEvent.touches.length > lastTouch ? currentScale + 0.2 : Math.max(1, currentScale - 0.2);
+                        flipbook.turn('zoom', newScale);
+                        lastTouch = e.originalEvent.touches.length;
+                    }
+                });
+            }
+
+            function zoomIn() {
+                const currentScale = flipbook.turn('zoom');
+                flipbook.turn('zoom', Math.min(currentScale + 0.2, 2));
+            }
+
+            function zoomOut() {
+                const currentScale = flipbook.turn('zoom');
+                flipbook.turn('zoom', Math.max(currentScale - 0.2, 1));
+            }
+
+            // PDF laden
             pdfjsLib.getDocument('001.pdf').promise.then(function (pdf) {
                 pdfDoc = pdf;
                 totalPages = pdf.numPages;
