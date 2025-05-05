@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>PDF Flipbook met Turn.js</title>
+    <!-- Stijl voor de flipbook -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -53,41 +54,44 @@
         }
     </style>
 
-    <!-- jQuery + Turn.js -->
+    <!-- Externe bibliotheken -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.1/turn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 </head>
 <body>
+    <!-- Laadindicator -->
     <div id="loading"><span>PDF wordt geladen... 0%</span></div>
+    
+    <!-- Flipbook container -->
     <div id="flipbook"></div>
-
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
     <script>
         $(document).ready(function() {
             const loadingIndicator = $('#loading');
             const flipbook = $('#flipbook');
+            const loadingSpan = $('#loading span');
+            
             let pdfDoc = null;
             let totalPages = 0;
             let loadedPages = 0;
-            const loadingSpan = $('#loading span');
 
-            // Update PDF.js worker source
+            // Stel PDF.js worker source in
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-            // Laad PDF
+            // Laad PDF-bestand
             pdfjsLib.getDocument('001.pdf').promise.then(function(pdf) {
                 pdfDoc = pdf;
                 totalPages = pdf.numPages;
                 
-                // Toon paginabericht
+                // Update laadstatus
                 loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} paginas`);
 
                 // Verwerk elke pagina
                 for (let i = 1; i <= totalPages; i++) {
                     (function(pageNum) {
                         pdf.getPage(pageNum).then(function(page) {
+                            // Bepaal viewport en maak canvas aan
                             const viewport = page.getViewport({ scale: 1.5 });
                             const canvas = document.createElement('canvas');
                             const context = canvas.getContext('2d');
