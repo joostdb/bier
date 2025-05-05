@@ -189,15 +189,20 @@
                 });
             }
 
-            function applyZoomToPage(pageNumber) {
-                const pageElement = $(`.page[data-page="${pageNumber}"]`);
-                if (pageElement.length) {
-                    const canvas = pageElement.find('canvas')[0];
-                    if (canvas) {
-                        canvas.style.transform = `scale(${currentScale})`;
-                    }
-                }
-            }
+    function applyZoomToPage(pageNumber) {
+        const pageElement = $(`.page[data-page="${pageNumber}"]`);
+        if (pageElement.length) {
+            const canvas = pageElement.find('canvas')[0];
+            const pageContent = pageElement.find('.page-content')[0];
+
+            // Pas zoom toe op canvas, page-content én page zelf
+            const zoomTransform = `scale(${currentScale})`;
+
+            if (canvas) canvas.style.transform = zoomTransform;
+            if (pageContent) pageContent.style.transform = zoomTransform;
+            pageElement[0].style.transform = zoomTransform;
+        }
+    }
 
             function updateZoom() {
                 const currentPage = flipbook.turn('page');
