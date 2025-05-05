@@ -5,6 +5,7 @@
     <title>Brouwerijinrichting</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+        /* Bestaande styling blijft hetzelfde */
         body {
             font-family: Arial, sans-serif;
             background: #f0f0f0;
@@ -15,7 +16,6 @@
             align-items: center;
             overflow-x: hidden;
         }
-
         #flipbook-container {
             width: 90vw;
             max-width: 900px;
@@ -23,7 +23,6 @@
             position: relative;
             margin: 20px auto;
         }
-
         #flipbook {
             width: 100%;
             height: 100%;
@@ -31,7 +30,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
             overflow: hidden;
         }
-
         #flipbook .page {
             background: white;
             display: flex;
@@ -40,7 +38,6 @@
             overflow: hidden;
             backface-visibility: hidden;
         }
-
         #flipbook .page-content {
             position: relative;
             width: 100%;
@@ -49,7 +46,6 @@
             justify-content: center;
             align-items: center;
         }
-
         #flipbook .page canvas {
             max-width: 100%;
             max-height: 100%;
@@ -58,7 +54,6 @@
             transform-origin: center center;
             transition: transform 0.2s ease;
         }
-
         #loading {
             position: fixed;
             top: 0;
@@ -72,13 +67,11 @@
             z-index: 999;
             flex-direction: column;
         }
-
         #loading span {
             font-size: 1.2em;
             color: #333;
             margin-top: 10px;
         }
-
         .zoom-controls {
             position: fixed;
             bottom: 20px;
@@ -87,7 +80,6 @@
             display: flex;
             gap: 10px;
         }
-
         .zoom-controls button {
             width: 40px;
             height: 40px;
@@ -101,40 +93,21 @@
             align-items: center;
             justify-content: center;
         }
-
         @media (max-width: 768px) {
             #flipbook-container {
                 max-width: 100%;
                 margin: 10px 0;
                 aspect-ratio: 3/4;
             }
-
             #loading span {
                 font-size: 1em;
             }
         }
-        #flipbook .page-content {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: transform 0.2s ease;
-}
-
-#flipbook .page canvas {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    user-select: none;
-}
     </style>
-
     <!-- jQuery + Turn.js -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="turn.js"></script>
-        <script src="zoom.js"></script>
+    <script src="zoom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 </head>
 <body>
@@ -142,17 +115,14 @@
         <div class="spinner"></div>
         <span>PDF wordt geladen... 0%</span>
     </div>
-    
     <div id="flipbook-container">
         <div id="flipbook"></div>
     </div>
-
     <div class="zoom-controls">
         <button id="zoom-in">+</button>
         <button id="zoom-out">-</button>
         <button id="zoom-reset">↻</button>
     </div>
-
     <script>
         $(document).ready(function () {
             const loadingIndicator = $('#loading');
@@ -162,7 +132,6 @@
             const zoomInBtn = $('#zoom-in');
             const zoomOutBtn = $('#zoom-out');
             const zoomResetBtn = $('#zoom-reset');
-
             let pdfDoc = null;
             let totalPages = 0;
             let loadedPages = 0;
@@ -172,9 +141,9 @@
             const maxScale = 2;
             const scaleStep = 0.25;
             const pageCanvases = {}; // Bewaar canvas elementen per pagina
-
+            
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
-
+            
             function getFlipbookSize() {
                 const containerWidth = flipbookContainer.width();
                 const containerHeight = flipbookContainer.height();
@@ -184,108 +153,142 @@
                 };
             }
 
-function initFlipbook() {
-    if (flipbook.turn("is")) {
-        flipbook.turn("destroy");
-    }
+            function initFlipbook() {
+                if (flipbook.turn("is")) {
+                    flipbook.turn("destroy");
+                }
+                const size = getFlipbookSize();
+                flipbook.turn({
+                    width: size.width,
+                    height: size.height,
+                    autoCenter: true,
+                    acceleration: true,
+                    gradients: true,
+                    when: {
+                        turning: function(e, page, view) {
+                            applyZoomToPage(page);
+                        }
+                    }
+                });
+            }
 
-    const size = getFlipbookSize();
-    
-    flipbook.turn({
-        width: size.width,
-        height: size.height,
-        autoCenter: true,
-        acceleration: true,
-        gradients: true,
-        when: {
-            turning: function(e, page, view) {
-                applyZoomToPage(page);
-                // Pas ook zoom toe op tegenoverliggende pagina
-                const oppositePage = page % 2 === 0 ? page - 1 : page + 1;
-                if (oppositePage >= 1 && oppositePage <= totalPages) {
-                    applyZoomToPage(oppositePage);
+            function updateFlipbookSize() {
+                const currentPage = flipbook.turn('page');
+                const pageElement = $(`.page[data-page="${currentPage}"]`);
+                
+                if (pageElement.length) {
+                    const canvas = pageElement.find('canvas')[0];
+                    if (canvas) {
+                        flipbook.turn("size", canvas.width, canvas.height);
+                    }
                 }
             }
-        }
-    });
-}
 
-function applyZoomToPage(pageNumber) {
-    const pageElement = $(`.page[data-page="${pageNumber}"]`);
-    if (pageElement.length) {
-        const pageContent = pageElement.find('.page-content');
-        const canvas = pageElement.find('canvas')[0];
-        
-        if (pageContent.length) {
-            pageContent.css({
-                'transform': `scale(${currentScale})`,
-                'transform-origin': 'center center'
-            });
-        }
-        
-        if (canvas) {
-            // Zorg dat canvas niet dubbel geschaald wordt
-            canvas.style.transform = 'none';
-        }
-    }
-}
+            function applyZoomToPage(pageNumber) {
+                const pageElement = $(`.page[data-page="${pageNumber}"]`);
+                if (pageElement.length) {
+                    const canvas = pageElement.find('canvas')[0];
+                    if (canvas) {
+                        const originalCanvas = pageCanvases[pageNumber];
+                        if (originalCanvas) {
+                            // Gebruik viewport informatie [[7]]
+                            const pageViewport = originalCanvas._viewport;
+                            const newViewport = pageViewport.clone({
+                                scale: pageViewport.scale * currentScale
+                            });
+                            
+                            // Maak nieuw canvas met aangepaste afmetingen
+                            const newCanvas = document.createElement('canvas');
+                            newCanvas.width = newViewport.width;
+                            newCanvas.height = newViewport.height;
+                            
+                            // Kopieer inhoud met nieuwe schaal
+                            const newContext = newCanvas.getContext('2d');
+                            newContext.drawImage(
+                                originalCanvas,
+                                0, 0,
+                                newCanvas.width,
+                                newCanvas.height
+                            );
+                            
+                            // Vervang oude canvas
+                            const pageContent = pageElement.find('.page-content');
+                            pageContent.empty().append(newCanvas);
+                            
+                            // Pas container-afmetingen aan
+                            pageContent.css({
+                                width: `${newCanvas.width}px`,
+                                height: `${newCanvas.height}px`
+                            });
+                            pageElement.css({
+                                width: `${newCanvas.width}px`,
+                                height: `${newCanvas.height}px`
+                            });
+                        }
+                    }
+                }
+            }
 
             function updateZoom() {
                 const currentPage = flipbook.turn('page');
                 applyZoomToPage(currentPage);
                 
-                // Pas ook toe op de tegenoverliggende pagina als die bestaat
+                // Update ook de tegenoverliggende pagina
                 const oppositePage = currentPage % 2 === 0 ? currentPage - 1 : currentPage + 1;
                 if (oppositePage <= totalPages) {
                     applyZoomToPage(oppositePage);
                 }
+                
+                updateFlipbookSize(); // Nieuwe aanroep
             }
 
-function renderPage(pageNum) {
-    pdfDoc.getPage(pageNum).then(function (page) {
-        const containerSize = getFlipbookSize();
-        const pageViewport = page.getViewport({ scale: 1 });
-        
-        // Bereken initiële schaal zonder rekening te houden met currentScale
-        const scale = Math.min(
-            containerSize.width / pageViewport.width,
-            containerSize.height / pageViewport.height
-        ) * 0.9;
-
-        const viewport = page.getViewport({ scale: scale });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        
-        pageCanvases[pageNum] = canvas;
-
-        const pageContent = $('<div class="page-content"></div>');
-        pageContent.append(canvas);
-        
-        const pageElement = $(`<div class="page" data-page="${pageNum}"></div>`);
-        pageElement.append(pageContent);
-        pageElements[pageNum - 1] = pageElement;
-
+            function renderPage(pageNum) {
+                pdfDoc.getPage(pageNum).then(function (page) {
+                    const containerSize = getFlipbookSize();
+                    const pageViewport = page.getViewport({ scale: 1 });
+                    
+                    // Bewaar viewport informatie [[7]]
+                    const viewport = page.getViewport({ scale: 1 });
+                    viewport.originalScale = containerSize.width / pageViewport.width;
+                    
+                    // Bereken initiële schaal
+                    const scale = Math.min(
+                        containerSize.width / pageViewport.width,
+                        containerSize.height / pageViewport.height
+                    ) * 0.9;
+                    
+                    const canvas = document.createElement('canvas');
+                    // Bewaar viewport voor later gebruik [[5]]
+                    canvas._viewport = page.getViewport({ scale: scale });
+                    
+                    const context = canvas.getContext('2d');
+                    canvas.height = canvas._viewport.height;
+                    canvas.width = canvas._viewport.width;
+                    
+                    // Bewaar canvas voor later gebruik
+                    pageCanvases[pageNum] = canvas;
+                    
+                    const pageContent = $('<div class="page-content"></div>');
+                    pageContent.append(canvas);
+                    const pageElement = $(`<div class="page" data-page="${pageNum}"></div>`);
+                    pageElement.append(pageContent);
+                    pageElements[pageNum - 1] = pageElement;
+                    
                     page.render({
                         canvasContext: context,
-                        viewport: viewport
+                        viewport: canvas._viewport
                     }).promise.then(function () {
                         loadedPages++;
                         const progress = Math.round((loadedPages / totalPages) * 100);
                         loadingSpan.text(`PDF wordt verwerkt... ${progress}%`);
-
                         if (loadedPages === totalPages) {
                             pageElements.forEach(el => flipbook.append(el));
-
                             // Voeg lege pagina toe als oneven
                             if (totalPages % 2 !== 0) {
                                 flipbook.append('<div class="page"></div>');
                             }
-
                             initFlipbook();
                             loadingIndicator.fadeOut();
-                            
                             // Initialiseer zoom voor de eerste pagina
                             updateZoom();
                         }
@@ -304,7 +307,6 @@ function renderPage(pageNum) {
                 pdfDoc = pdf;
                 totalPages = pdf.numPages;
                 loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} pagina's`);
-
                 for (let i = 1; i <= totalPages; i++) {
                     renderPage(i);
                 }
