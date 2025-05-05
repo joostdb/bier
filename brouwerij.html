@@ -3,22 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <title>PDF Flipbook met Turn.js</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #f0f0f0;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
-        #flipbook {
-            width: 800px;
-            height: 600px;
+        #flipbook-container {
+            width: 90vw;
+            max-width: 900px;
+            aspect-ratio: 4 / 3; /* Behoud verhouding 4:3 */
+            position: relative;
             margin: 20px auto;
+        }
+
+        #flipbook {
+            width: 100%;
+            height: 100%;
             background: #fff;
             box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            overflow: hidden;
         }
 
         #flipbook .page {
@@ -52,87 +62,133 @@
             font-size: 1.2em;
             color: #333;
         }
+
+        @media (max-width: 768px) {
+            #flipbook-container {
+                max-width: 100%;
+                margin: 10px 0;
+            }
+
+            #loading span {
+                font-size: 1em;
+            }
+        }
     </style>
 
     <!-- jQuery + Turn.js -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="turn.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.1/turn.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 </head>
 <body>
     <div id="loading"><span>PDF wordt geladen... 0%</span></div>
-    <div id="flipbook"></div>
-
-    <!-- PDF.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <div id="flipbook-container">
+        <div id="flipbook"></div>
+    </div>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             const loadingIndicator = $('#loading');
             const flipbook = $('#flipbook');
+            const flipbookContainer = $('#flipbook-container');
+            const loadingSpan = $('#loading span');
+
             let pdfDoc = null;
             let totalPages = 0;
             let loadedPages = 0;
-            const loadingSpan = $('#loading span');
             const pageElements = [];
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-            pdfjsLib.getDocument('001.pdf').promise.then(function(pdf) {
+            function getFlipbookSize() {
+                const containerWidth = flipbookContainer.width();
+                const containerHeight = flipbookContainer.height();
+                return {
+                    width: containerWidth,
+                    height: containerHeight
+                };
+            }
+
+            function initFlipbook() {
+                if (flipbook.turn("is")) {
+                    flipbook.turn("destroy");
+                }
+
+                flipbook.turn({
+                    width: getFlipbookSize().width,
+                    height: getFlipbookSize().height,
+                    autoCenter: true,
+                    acceleration: true
+                });
+            }
+
+            function renderPage(pageNum) {
+                pdfDoc.getPage(pageNum).then(function (page) {
+                    const containerSize = getFlipbookSize();
+                    const scale = Math.min(
+                        containerSize.width / page.getViewport({ scale: 1 }).width,
+                        containerSize.height / page.getViewport({ scale: 1 }).height
+                    ) * 1.5;
+
+                    const viewport = page.getViewport({ scale: scale });
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise.then(function () {
+                        const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                        const pageElement = $(`<div class="page"><img src="${imgData}" alt="Pagina ${pageNum}"></div>`);
+                        pageElements[pageNum - 1] = pageElement;
+
+                        loadedPages++;
+                        loadingSpan.text(`PDF wordt verwerkt... ${loadedPages}/${totalPages} pagina’s`);
+
+                        if (loadedPages === totalPages) {
+                            pageElements.forEach(el => flipbook.append(el));
+
+                            // Voeg lege pagina toe als oneven
+                            if (totalPages % 2 !== 0) {
+                                flipbook.append('<div class="page"></div>');
+                            }
+
+                            initFlipbook();
+                            loadingIndicator.fadeOut();
+                        }
+                    }).catch(function (error) {
+                        console.error(`Fout bij renderen van pagina ${pageNum}:`, error);
+                        loadedPages++;
+                    });
+                }).catch(function (error) {
+                    console.error(`Fout bij ophalen van pagina ${pageNum}:`, error);
+                    loadedPages++;
+                });
+            }
+
+            pdfjsLib.getDocument('001.pdf').promise.then(function (pdf) {
                 pdfDoc = pdf;
                 totalPages = pdf.numPages;
                 loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} pagina’s`);
 
                 for (let i = 1; i <= totalPages; i++) {
-                    (function(pageNum) {
-                        pdf.getPage(pageNum).then(function(page) {
-                            const viewport = page.getViewport({ scale: 1.5 });
-                            const canvas = document.createElement('canvas');
-                            const context = canvas.getContext('2d');
-                            canvas.height = viewport.height;
-                            canvas.width = viewport.width;
-
-                            page.render({
-                                canvasContext: context,
-                                viewport: viewport
-                            }).promise.then(function() {
-                                const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                                const pageElement = $(`<div class="page"><img src="${imgData}" alt="Pagina ${pageNum}"></div>`);
-                                
-                                // Opslaan op juiste plek
-                                pageElements[pageNum - 1] = pageElement;
-
-                                loadedPages++;
-                                loadingSpan.text(`PDF wordt verwerkt... ${loadedPages}/${totalPages} pagina’s`);
-
-                                if (loadedPages === totalPages) {
-                                    // Alle pagina's toevoegen in juiste volgorde
-                                    pageElements.forEach(el => flipbook.append(el));
-
-                                    // Initialiseer flipbook
-                                    flipbook.turn({
-                                        width: 800,
-                                        height: 600,
-                                        autoCenter: true,
-                                        acceleration: true
-                                    });
-
-                                    loadingIndicator.fadeOut();
-                                }
-                            }).catch(function(error) {
-                                console.error(`Fout bij renderen van pagina ${pageNum}:`, error);
-                                loadedPages++;
-                            });
-                        }).catch(function(error) {
-                            console.error(`Fout bij ophalen van pagina ${pageNum}:`, error);
-                            loadedPages++;
-                        });
+                    (function (pageNum) {
+                        renderPage(pageNum);
                     })(i);
                 }
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.error('Fout bij laden van PDF:', error);
                 loadingIndicator.hide();
                 alert('Kan PDF niet laden. Controleer of het bestand beschikbaar is.');
+            });
+
+            // Herinitialiseer bij venstergrootteverandering
+            $(window).on('resize', function () {
+                if (loadedPages === totalPages) {
+                    setTimeout(initFlipbook, 300); // Kleine vertraging voor smoothness
+                }
             });
         });
     </script>
