@@ -79,6 +79,7 @@
     <!-- jQuery + Turn.js -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="turn.js"></script>
+       <script src="zoom.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 </head>
 <body>
@@ -92,154 +93,120 @@
         </div>
     </div>
 
-    <script>
-        $(document).ready(function () {
-            const loadingIndicator = $('#loading');
-            const flipbook = $('#flipbook');
-            const flipbookContainer = $('#flipbook-container');
-            const loadingSpan = $('#loading span');
+ <script>
+    $(document).ready(function () {
+        const loadingIndicator = $('#loading');
+        const flipbook = $('#flipbook');
+        const flipbookContainer = $('#flipbook-container');
+        const loadingSpan = $('#loading span');
 
-            let pdfDoc = null;
-            let totalPages = 0;
-            let loadedPages = 0;
-            const pageElements = [];
+        let pdfDoc = null;
+        let totalPages = 0;
+        let loadedPages = 0;
+        const pageElements = [];
+        let currentZoom = 1;
 
-            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-            function getFlipbookSize() {
-                const containerWidth = flipbookContainer.width();
-                const containerHeight = Math.min(
-                    flipbookContainer.height(),
-                    window.innerHeight * 0.8
-                );
-                return {
-                    width: containerWidth,
-                    height: containerHeight
-                };
-            }
+        function getFlipbookSize() {
+            const containerWidth = flipbookContainer.width();
+            const height = Math.min(containerWidth * 0.75, window.innerHeight * 0.8);
+            return {
+                width: containerWidth,
+                height: height
+            };
+        }
 
-            function initFlipbook() {
-                if (flipbook.turn("is")) {
-                    flipbook.turn("destroy");
+        function initFlipbook() {
+            const size = getFlipbookSize();
+
+            if (flipbook.turn("is")) {
+                flipbook.turn("destroy");
+                flipbook.empty();
+                pageElements.forEach(el => flipbook.append(el));
+                if (totalPages % 2 !== 0) {
+                    flipbook.append('<div class="page"></div>');
                 }
-
-                flipbook.turn({
-                    width: getFlipbookSize().width,
-                    height: getFlipbookSize().height,
-                    autoCenter: true,
-                    acceleration: true,
-                    elevation: 50,
-                    gradients: true,
-                    zoom: 1.1,
-                    maxZoom: 2,
-                    when: {
-                        zoomed: function(event, page, view, scale) {
-                            console.log('Zoomfactor:', scale);
-                        }
-                    }
-                });
             }
 
-            function renderPage(pageNum) {
-                pdfDoc.getPage(pageNum).then(function (page) {
-                    const containerSize = getFlipbookSize();
-                    const viewport = page.getViewport({ 
-                        scale: 1.5
-                    });
-                    
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+            flipbook.turn({
+                width: size.width,
+                height: size.height,
+                autoCenter: true,
+                acceleration: true,
+                elevation: 50,
+                gradients: true
+            });
 
-                    page.render({
-                        canvasContext: context,
-                        viewport: viewport
-                    }).promise.then(function () {
-                        const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                        const pageElement = $(`<div class="page"><img src="${imgData}" alt="Pagina ${pageNum}"></div>`);
-                        pageElements[pageNum - 1] = pageElement;
+            applyZoom();
+        }
 
-                        loadedPages++;
-                        loadingSpan.text(`PDF wordt verwerkt... ${loadedPages}/${totalPages} pagina’s`);
+        function renderPage(pageNum) {
+            pdfDoc.getPage(pageNum).then(function (page) {
+                const viewport = page.getViewport({ scale: 1.5 });
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
 
-                        if (loadedPages === totalPages) {
-                            pageElements.forEach(el => flipbook.append(el));
+                page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise.then(function () {
+                    const imgData = canvas.toDataURL('image/jpeg', 0.9);
+                    const pageElement = $(`<div class="page"><img src="${imgData}" alt="Pagina ${pageNum}"></div>`);
+                    pageElements[pageNum - 1] = pageElement;
 
-                            // Voeg lege pagina toe als oneven
-                            if (totalPages % 2 !== 0) {
-                                flipbook.append('<div class="page"></div>');
-                            }
-
-                            initFlipbook();
-                            loadingIndicator.fadeOut();
-                            
-                            // Voeg zoom event listeners toe
-                            addZoomListeners();
-                        }
-                    }).catch(function (error) {
-                        console.error(`Fout bij renderen van pagina ${pageNum}:`, error);
-                        loadedPages++;
-                    });
-                }).catch(function (error) {
-                    console.error(`Fout bij ophalen van pagina ${pageNum}:`, error);
                     loadedPages++;
-                });
-            }
+                    loadingSpan.text(`PDF wordt verwerkt... ${loadedPages}/${totalPages} pagina’s`);
 
-            function addZoomListeners() {
-                // Touch gesture support
-                let lastTouch = 0;
-                flipbook.on('touchstart', function (e) {
-                    if (e.originalEvent.touches.length > 1) {
-                        lastTouch = e.originalEvent.touches.length;
+                    if (loadedPages === totalPages) {
+                        pageElements.forEach(el => flipbook.append(el));
+                        if (totalPages % 2 !== 0) {
+                            flipbook.append('<div class="page"></div>');
+                        }
+                        initFlipbook();
+                        loadingIndicator.fadeOut();
                     }
                 });
-
-                flipbook.on('touchmove', function (e) {
-                    if (e.originalEvent.touches.length > 1 && e.originalEvent.touches.length !== lastTouch) {
-                        const currentScale = flipbook.turn('zoom');
-                        const newScale = e.originalEvent.touches.length > lastTouch ? currentScale + 0.2 : Math.max(1, currentScale - 0.2);
-                        flipbook.turn('zoom', newScale);
-                        lastTouch = e.originalEvent.touches.length;
-                    }
-                });
-            }
-
-            function zoomIn() {
-                const currentScale = flipbook.turn('zoom');
-                flipbook.turn('zoom', Math.min(currentScale + 0.2, 2));
-            }
-
-            function zoomOut() {
-                const currentScale = flipbook.turn('zoom');
-                flipbook.turn('zoom', Math.max(currentScale - 0.2, 1));
-            }
-
-            // PDF laden
-            pdfjsLib.getDocument('001.pdf').promise.then(function (pdf) {
-                pdfDoc = pdf;
-                totalPages = pdf.numPages;
-                loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} pagina’s`);
-
-                for (let i = 1; i <= totalPages; i++) {
-                    (function (pageNum) {
-                        renderPage(pageNum);
-                    })(i);
-                }
-            }).catch(function (error) {
-                console.error('Fout bij laden van PDF:', error);
-                loadingIndicator.hide();
-                alert('Kan PDF niet laden. Controleer of het bestand beschikbaar is.');
             });
+        }
 
-            // Herinitialiseer bij venstergrootteverandering
-            $(window).on('resize', function () {
-                if (loadedPages === totalPages) {
-                    setTimeout(initFlipbook, 300); // Kleine vertraging voor smoothness
-                }
-            });
+        function applyZoom() {
+            flipbook.css('transform', `scale(${currentZoom})`);
+            flipbook.css('transform-origin', 'top center');
+        }
+
+        window.zoomIn = function () {
+            currentZoom = Math.min(currentZoom + 0.1, 2);
+            applyZoom();
+        };
+
+        window.zoomOut = function () {
+            currentZoom = Math.max(currentZoom - 0.1, 0.5);
+            applyZoom();
+        };
+
+        pdfjsLib.getDocument('001.pdf').promise.then(function (pdf) {
+            pdfDoc = pdf;
+            totalPages = pdf.numPages;
+            loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} pagina’s`);
+            for (let i = 1; i <= totalPages; i++) {
+                renderPage(i);
+            }
+        }).catch(function (error) {
+            console.error('Fout bij laden van PDF:', error);
+            loadingIndicator.hide();
+            alert('Kan PDF niet laden. Controleer of het bestand beschikbaar is.');
         });
-    </script>
+
+        $(window).on('resize', function () {
+            if (loadedPages === totalPages) {
+                initFlipbook();
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
