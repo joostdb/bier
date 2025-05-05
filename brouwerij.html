@@ -2,7 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
-    <title>PDF Flipbook met Turn.js</title>
+    <title>Brouwerijinrichting</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         body {
@@ -41,11 +41,22 @@
             backface-visibility: hidden;
         }
 
-        #flipbook .page img {
+        #flipbook .page-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #flipbook .page canvas {
             max-width: 100%;
             max-height: 100%;
             display: block;
             user-select: none;
+            transform-origin: center center;
+            transition: transform 0.2s ease;
         }
 
         #loading {
@@ -144,6 +155,7 @@
             const minScale = 0.5;
             const maxScale = 2;
             const scaleStep = 0.25;
+            const pageCanvases = {}; // Bewaar canvas elementen per pagina
 
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
@@ -171,7 +183,6 @@
                     gradients: true,
                     when: {
                         turning: function(e, page, view) {
-                            // Zorg ervoor dat de zoom staat voor de huidige pagina
                             applyZoomToPage(page);
                         }
                     }
@@ -181,10 +192,10 @@
             function applyZoomToPage(pageNumber) {
                 const pageElement = $(`.page[data-page="${pageNumber}"]`);
                 if (pageElement.length) {
-                    pageElement.find('img').css({
-                        'transform': `scale(${currentScale})`,
-                        'transform-origin': 'center center'
-                    });
+                    const canvas = pageElement.find('canvas')[0];
+                    if (canvas) {
+                        canvas.style.transform = `scale(${currentScale})`;
+                    }
                 }
             }
 
@@ -204,26 +215,32 @@
                     const containerSize = getFlipbookSize();
                     const pageViewport = page.getViewport({ scale: 1 });
                     
-                    // Bereken schaal om de pagina in de container te passen
+                    // Bereken initiële schaal
                     const scale = Math.min(
                         containerSize.width / pageViewport.width,
                         containerSize.height / pageViewport.height
-                    ) * 0.9; // 90% van container om wat marge te houden
+                    ) * 0.9;
 
                     const viewport = page.getViewport({ scale: scale });
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
                     canvas.height = viewport.height;
                     canvas.width = viewport.width;
+                    
+                    // Bewaar canvas voor later gebruik
+                    pageCanvases[pageNum] = canvas;
+
+                    const pageContent = $('<div class="page-content"></div>');
+                    pageContent.append(canvas);
+                    
+                    const pageElement = $(`<div class="page" data-page="${pageNum}"></div>`);
+                    pageElement.append(pageContent);
+                    pageElements[pageNum - 1] = pageElement;
 
                     page.render({
                         canvasContext: context,
                         viewport: viewport
                     }).promise.then(function () {
-                        const imgData = canvas.toDataURL('image/jpeg', 0.9);
-                        const pageElement = $(`<div class="page" data-page="${pageNum}"><img src="${imgData}" alt="Pagina ${pageNum}"></div>`);
-                        pageElements[pageNum - 1] = pageElement;
-
                         loadedPages++;
                         const progress = Math.round((loadedPages / totalPages) * 100);
                         loadingSpan.text(`PDF wordt verwerkt... ${progress}%`);
