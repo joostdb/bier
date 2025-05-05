@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDF Viewer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <style>
+        #pdf-viewer { width: 100%; height: 100vh; }
+    </style>
+</head>
+<body>
+    <div>
+        <canvas id="pdf-viewer"></canvas>
+    </div>
+    <script>
+        pdfjsLib.getDocument('001.pdf').promise.then(function(pdf) {
+            return pdf.getPage(1);
+        }).then(function(page) {
+            var scale = 1.5;
+            var viewport = page.getViewport({ scale: scale });
+            var canvas = document.getElementById('pdf-viewer');
+            var context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            page.render({
+                canvasContext: context,
+                viewport: viewport
+            });
+        });
+    </script>
+</body>
+</html>
