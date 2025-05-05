@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>PDF Flipbook with Turn.js</title>
+    <title>PDF Flipbook met Turn.js</title>
     <!-- Turn.js CSS -->
     <style>
         #flipbook {
@@ -14,64 +13,27 @@
             background: white;
             box-shadow: 0 0 10px rgba(0,0,0,0.2);
         }
-        #flipbook .page img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
     </style>
+    <!-- jQuery + Turn.js -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.1/turn.min.js"></script>
 </head>
 <body>
-    <div id="flipbook"></div>
-
-    <!-- jQuery (vereist voor Turn.js) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <!-- Turn.js Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.1/turn.min.js"></script>
-    <!-- PDF.js om PDF naar afbeeldingen te converteren -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+    <div id="flipbook">
+        <div class="page">Pagina 1</div>
+        <div class="page">Pagina 2</div>
+        <div class="page">Pagina 3</div>
+        <div class="page">Pagina 4</div>
+    </div>
 
     <script>
-        // Stel PDF.js in
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
-
-        // Laad de PDF en converteer elke pagina naar een afbeelding
-        let pdfDoc = null;
-        let totalPages = 0;
-
-        pdfjsLib.getDocument('001.pdf').promise.then(function(pdf) {
-            pdfDoc = pdf;
-            totalPages = pdf.numPages;
-            
-            // Maak een flipbook voor elke pagina
-            for (let i = 1; i <= totalPages; i++) {
-                pdf.getPage(i).then(function(page) {
-                    const viewport = page.getViewport({ scale: 1.5 });
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
-
-                    page.render({
-                        canvasContext: context,
-                        viewport: viewport
-                    }).promise.then(function() {
-                        const imgData = canvas.toDataURL('image/jpeg');
-                        const pageElement = $(`<div class="page"><img src="${imgData}"></div>`);
-                        $('#flipbook').append(pageElement);
-                        
-                        // Initialiseer Turn.js na het laden van alle pagina's
-                        if (i === totalPages) {
-                            $('#flipbook').turn({
-                                width: 800,
-                                height: 600,
-                                autoCenter: true,
-                                acceleration: true
-                            });
-                        }
-                    });
-                });
-            }
+        $(document).ready(function() {
+            // Initialiseer Turn.js
+            $('#flipbook').turn({
+                width: 800,
+                height: 600,
+                autoCenter: true
+            });
         });
     </script>
 </body>
