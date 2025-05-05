@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="nl">
 <head>
+    <meta charset="UTF-8">
     <title>PDF Flipbook met Turn.js</title>
-    <!-- Stijl voor de flipbook -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -54,96 +54,82 @@
         }
     </style>
 
-    <!-- Externe bibliotheken -->
+    <!-- jQuery + Turn.js -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.1/turn.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 </head>
 <body>
-    <!-- Laadindicator -->
     <div id="loading"><span>PDF wordt geladen... 0%</span></div>
-    
-    <!-- Flipbook container -->
     <div id="flipbook"></div>
+
+    <!-- PDF.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
 
     <script>
         $(document).ready(function() {
             const loadingIndicator = $('#loading');
             const flipbook = $('#flipbook');
-            const loadingSpan = $('#loading span');
-            
             let pdfDoc = null;
             let totalPages = 0;
             let loadedPages = 0;
+            const loadingSpan = $('#loading span');
+            const pageElements = [];
 
-            // Stel PDF.js worker source in
             pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
 
-            // Laad PDF-bestand
             pdfjsLib.getDocument('001.pdf').promise.then(function(pdf) {
                 pdfDoc = pdf;
                 totalPages = pdf.numPages;
-                
-                // Update laadstatus
-                loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} paginas`);
+                loadingSpan.text(`PDF wordt verwerkt... 0/${totalPages} pagina’s`);
 
-                // Verwerk elke pagina
                 for (let i = 1; i <= totalPages; i++) {
                     (function(pageNum) {
                         pdf.getPage(pageNum).then(function(page) {
-                            // Bepaal viewport en maak canvas aan
                             const viewport = page.getViewport({ scale: 1.5 });
                             const canvas = document.createElement('canvas');
                             const context = canvas.getContext('2d');
                             canvas.height = viewport.height;
                             canvas.width = viewport.width;
 
-                            // Render pagina
                             page.render({
                                 canvasContext: context,
                                 viewport: viewport
                             }).promise.then(function() {
-                                // Converteer naar afbeelding
                                 const imgData = canvas.toDataURL('image/jpeg', 0.9);
                                 const pageElement = $(`<div class="page"><img src="${imgData}" alt="Pagina ${pageNum}"></div>`);
                                 
-                                // Voeg toe aan flipbook
-                                flipbook.append(pageElement);
-                                
-                                // Update voortgang
+                                // Opslaan op juiste plek
+                                pageElements[pageNum - 1] = pageElement;
+
                                 loadedPages++;
-                                loadingSpan.text(`PDF wordt verwerkt... ${loadedPages}/${totalPages} paginas`);
-                                
-                                // Controleer of alle paginas zijn geladen
+                                loadingSpan.text(`PDF wordt verwerkt... ${loadedPages}/${totalPages} pagina’s`);
+
                                 if (loadedPages === totalPages) {
+                                    // Alle pagina's toevoegen in juiste volgorde
+                                    pageElements.forEach(el => flipbook.append(el));
+
                                     // Initialiseer flipbook
                                     flipbook.turn({
                                         width: 800,
                                         height: 600,
                                         autoCenter: true,
-                                        acceleration: true,
-                                        when: {
-                                            turned: function(e, page) {
-                                                // Optionele callback voor paginaverandering
-                                            }
-                                        }
+                                        acceleration: true
                                     });
 
-                                    // Verberg laadindicator
                                     loadingIndicator.fadeOut();
                                 }
                             }).catch(function(error) {
-                                console.error('Fout bij renderen pagina:', pageNum, error);
+                                console.error(`Fout bij renderen van pagina ${pageNum}:`, error);
                                 loadedPages++;
                             });
-                            
-                            // Geheugenbeheer
-                            canvas = null;
+                        }).catch(function(error) {
+                            console.error(`Fout bij ophalen van pagina ${pageNum}:`, error);
+                            loadedPages++;
                         });
                     })(i);
                 }
             }).catch(function(error) {
-                console.error('Fout bij laden PDF:', error);
+                console.error('Fout bij laden van PDF:', error);
                 loadingIndicator.hide();
                 alert('Kan PDF niet laden. Controleer of het bestand beschikbaar is.');
             });
